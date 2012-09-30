@@ -3,12 +3,18 @@ package seasonal.parade.halloween.common;
 import java.io.File;
 import java.util.logging.Logger;
 
+import seasonal.parade.halloween.blocks.BlockAsh;
+import seasonal.parade.halloween.blocks.BlockAshBlock;
 import seasonal.parade.halloween.blocks.EvilPumpkin;
 import seasonal.parade.halloween.client.ClientPacketHandler;
+import seasonal.parade.halloween.client.EntityEvilSnowman;
+import seasonal.parade.halloween.items.HalloweenItem;
 import seasonal.parade.halloween.server.ServerPacketHandler;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockPumpkin;
+import net.minecraft.src.BlockSnow;
+import net.minecraft.src.BlockSnowBlock;
 import net.minecraft.src.Item;
 import net.minecraft.src.Material;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -54,14 +60,14 @@ public class Halloween {
 
 	@PreInit
 	public void load(FMLPreInitializationEvent evt) {
-
+		
 		GameRegistry.registerWorldGenerator(new HalloweenWorldGenerator());
 
 		NetworkRegistry.instance().registerGuiHandler(this, guiHandler);
 		proxy.registerRenderThings();
 
 		RegisterBlocks(new Block[] {
-				evilPumpkin, evilLantern
+				evilPumpkin, evilLantern, ash, blockAsh
 		});
 		
 	
@@ -71,14 +77,19 @@ public class Halloween {
 		// Block Names
 		LanguageRegistry.addName(evilPumpkin, "Evil Pumpkin");
 		LanguageRegistry.addName(evilLantern, "Evil 'o' Lantern");
+		LanguageRegistry.addName(ash, "Ash");
+		LanguageRegistry.addName(blockAsh, "Ash Block");
 		
 		// Item Names
-//		LanguageRegistry.addName(chocolateBarItem, "Chocolate Bar");
+		LanguageRegistry.addName(ashItem, "Ash");
 
 		// --------------------------------------------------------------------
 		RecipeRegistry.registerRecipes();
 		EntityRegistry.registerEntities();
-//		MinecraftForge.setBlockHarvestLevel(Chocolate, "pickaxe", 1);
+		
+		
+		 MinecraftForge.setBlockHarvestLevel(ash, "shovel", 0);
+		 MinecraftForge.setBlockHarvestLevel(blockAsh, "shovel", 0);
 
 		NetworkRegistry.instance().registerGuiHandler(this, guiHandler);
 		proxy.registerRenderThings();
@@ -99,8 +110,12 @@ public class Halloween {
 
 	// Block Registry
     public static Block evilPumpkin = (new EvilPumpkin(DefaultProps.EVIL_PUMPKIN_BLOCK_ID, 0, false)).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setBlockName("evilPumpkin");
-    public static final Block evilLantern = (new EvilPumpkin(DefaultProps.EVIL_LANTERN_BLOCK_ID, 0, true)).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setLightValue(1.0F).setBlockName("evilLantern");
-	
+    public static Block evilLantern = (new EvilPumpkin(DefaultProps.EVIL_LANTERN_BLOCK_ID, 0, true)).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setLightValue(1.0F).setBlockName("evilLantern");
+    public static Block ash = (new BlockAsh(DefaultProps.ASH_LAYER_ID, 6)).setHardness(0.1F).setStepSound(Block.soundClothFootstep).setBlockName("ash").setLightOpacity(0);
+    public static Block blockAsh = (new BlockAshBlock(DefaultProps.ASH_BLOCK_ID, 6)).setHardness(0.2F).setStepSound(Block.soundClothFootstep).setBlockName("ashBlock");
+
+    
+    
 	public void RegisterBlocks(Block ablock[])
     {
         Block ablock1[] = ablock;
@@ -114,5 +129,5 @@ public class Halloween {
     }
 
 	// Item Registry
-//	public static Item chocolateBarItem = (new EasterFood(DefaultProps.CHOCOLATE_BAR_ID, 2, 1.0F, false)).setIconIndex(0 * 16 + 0).setItemName("chocolateBar");
+	public static Item ashItem = (new HalloweenItem(DefaultProps.ASH_ITEM_ID)).setIconIndex(0).setMaxStackSize(16).setCreativeTab(CreativeTabs.tabDecorations).setItemName("ashItem");
 }
