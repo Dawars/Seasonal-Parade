@@ -129,5 +129,5 @@ public class Halloween {
     }
 
 	// Item Registry
-	public static Item ashItem = (new HalloweenItem(DefaultProps.ASH_ITEM_ID)).setIconIndex(0).setMaxStackSize(16).setCreativeTab(CreativeTabs.tabDecorations).setItemName("ashItem");
+	public static Item ashItem = (new HalloweenItem(DefaultProps.ASH_ITEM_ID)).setIconIndex(0).setMaxStackSize(16).setTabToDisplayOn(CreativeTabs.tabDeco).setItemName("ashItem");
 }
