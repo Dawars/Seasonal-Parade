@@ -15,6 +15,7 @@ public class DefaultProps {
 
 	public static int WORLD_HEIGHT = 256;
 	public static final String NET_CHANNEL_NAME = "Halloween";
+
 	public static int NETWORK_UPDATE_RANGE = 128;
 
 	public static String TEXTURE_PATH = "/seasonal/parade/halloween/gfx";
@@ -36,7 +37,9 @@ public class DefaultProps {
 	public static int EVIL_LANTERN_BLOCK_ID = 3201;
 	public static int ASH_LAYER_ID = 3202;
 	public static int ASH_BLOCK_ID = 3203;
-	public static int COCOA_BUSH_SAPLING_ID = 3203;
+	public static int CANDY_BASKET_ID = 3204;
+	public static int MIXER_BLOCK_ID = 3205;
+
 	
 	
 	//item ids 15200 - 15500

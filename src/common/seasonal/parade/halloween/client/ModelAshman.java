@@ -8,7 +8,7 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelEvilSnowman extends ModelBase
+public class ModelAshman extends ModelBase
 {
     public ModelRenderer body;
     public ModelRenderer bottomBody;
@@ -16,7 +16,7 @@ public class ModelEvilSnowman extends ModelBase
     public ModelRenderer rightHand;
     public ModelRenderer leftHand;
 
-    public ModelEvilSnowman()
+    public ModelAshman()
     {
         float var1 = 4.0F;
         float var2 = 0.0F;

@@ -1,6 +1,6 @@
 package seasonal.parade.halloween.blocks;
 
-import seasonal.parade.halloween.client.EntityEvilSnowman;
+import seasonal.parade.halloween.client.EntityAshman;
 import seasonal.parade.halloween.common.Halloween;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockDirectional;
@@ -80,7 +80,7 @@ public class EvilPumpkin extends HalloweenBlockDirectional
                 world.setBlock(par2, par3, par4, 0);
                 world.setBlock(par2, par3 - 1, par4, 0);
                 world.setBlock(par2, par3 - 2, par4, 0);
-                EntityEvilSnowman var9 = new EntityEvilSnowman(world);
+                EntityAshman var9 = new EntityAshman(world);
                 var9.setLocationAndAngles((double)par2 + 0.5D, (double)par3 - 1.95D, (double)par4 + 0.5D, 0.0F, 0.0F);
                 world.spawnEntityInWorld(var9);
                 world.notifyBlockChange(par2, par3, par4, 0);

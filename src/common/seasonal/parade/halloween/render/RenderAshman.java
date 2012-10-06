@@ -1,4 +1,4 @@
-package seasonal.parade.halloween.client;
+package seasonal.parade.halloween.render;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityLiving;
@@ -15,25 +15,27 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import seasonal.parade.halloween.client.EntityAshman;
+import seasonal.parade.halloween.client.ModelAshman;
 import seasonal.parade.halloween.common.Halloween;
 
 @SideOnly(Side.CLIENT)
-public class RenderEvilSnowman extends RenderLiving
+public class RenderAshman extends RenderLiving
 {
     /** A reference to the Snowman model in RenderSnowMan. */
-    private ModelEvilSnowman evilSnowmanModel;
+    private ModelAshman evilSnowmanModel;
 
-    public RenderEvilSnowman()
+    public RenderAshman()
     {
-        super(new ModelEvilSnowman(), 0.5F);
-        this.evilSnowmanModel = (ModelEvilSnowman)super.mainModel;
+        super(new ModelAshman(), 0.5F);
+        this.evilSnowmanModel = (ModelAshman)super.mainModel;
         this.setRenderPassModel(this.evilSnowmanModel);
     }
 
     /**
      * Renders this snowman's pumpkin.
      */
-    protected void renderSnowmanPumpkin(EntityEvilSnowman par1EntitySnowman, float par2)
+    protected void renderSnowmanPumpkin(EntityAshman par1EntitySnowman, float par2)
     {
         super.renderEquippedItems(par1EntitySnowman, par2);
         ItemStack var3 = new ItemStack(Halloween.evilLantern, 1);
@@ -61,6 +63,6 @@ public class RenderEvilSnowman extends RenderLiving
 
     protected void renderEquippedItems(EntityLiving par1EntityLiving, float par2)
     {
-        this.renderSnowmanPumpkin((EntityEvilSnowman)par1EntityLiving, par2);
+        this.renderSnowmanPumpkin((EntityAshman)par1EntityLiving, par2);
     }
 }

@@ -15,10 +15,10 @@ public class ServerPacketHandler implements IPacketHandler {
 	 * Only packets sent from clients to a server arrive here.
 	 */
 	@Override
-	public void onPacketData(NetworkManager manager, Packet250CustomPayload packet, Player player) {
-		DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data));
+	public void onPacketData(NetworkManager manager, Packet250CustomPayload payload, Player player){
+		DataInputStream data = new DataInputStream(new ByteArrayInputStream(payload.data));
 		EntityPlayer sender = (EntityPlayer) player;
-
+	
 		/*
 		 * Now do data.read... to retrieve your packet data It would be wise to start all your packets with an Int to distinguish them
 		 * 

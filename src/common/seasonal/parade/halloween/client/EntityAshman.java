@@ -16,9 +16,9 @@ import net.minecraft.src.Item;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
 
-public class EntityEvilSnowman extends EntityGolem
+public class EntityAshman extends EntityGolem
 {
-    public EntityEvilSnowman(World par1World)
+    public EntityAshman(World par1World)
     {
         super(par1World);
         this.texture = DefaultProps.TEXTURE_PATH + "/mob/ashman.png";
