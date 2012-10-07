@@ -6,6 +6,7 @@ import seasonal.parade.halloween.common.CommonProxy;
 import seasonal.parade.halloween.common.DefaultProps;
 import seasonal.parade.halloween.render.RenderAshman;
 import net.minecraft.src.ModelSnowMan;
+import net.minecraft.src.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -19,5 +20,10 @@ public class ClientProxy extends CommonProxy {
 			MinecraftForgeClient.preloadTexture(texture);
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityAshman.class, new RenderAshman());
+	}
+	
+	@Override
+	public boolean isSimulating(World world){
+		return world.isRemote;
 	}
 }

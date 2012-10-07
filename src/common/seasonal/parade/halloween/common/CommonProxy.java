@@ -15,4 +15,8 @@ public class CommonProxy {
 	public boolean isRenderWorld(World world) {
 		return world.isRemote;
 	}
+
+	public boolean isSimulating(World world) {
+		return world.isRemote;
+	}
 }
