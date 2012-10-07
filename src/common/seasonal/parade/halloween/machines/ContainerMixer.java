@@ -1,6 +1,8 @@
 package seasonal.parade.halloween.machines;
 
 import net.minecraft.src.*;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.ISidedInventory;
 
 // Create a class and extend Container
 public class ContainerMixer extends Container{
@@ -16,10 +18,10 @@ public class ContainerMixer extends Container{
 		
 		//Input
 		addSlotToContainer(new Slot(tile_entity, 0, 14, 15));
-		addSlotToContainer(new Slot(tile_entity, 1, 14, 33));
+		addSlotToContainer(new Slot(tile_entity, 1, 32, 33));
 		addSlotToContainer(new Slot(tile_entity, 2, 32, 15));
-		addSlotToContainer(new Slot(tile_entity, 3, 32, 33));
-		
+		addSlotToContainer(new Slot(tile_entity, 3, 14, 33));
+
 		//Liquid input
 		
 		addSlotToContainer(new Slot(tile_entity, 4, 23, 54));
@@ -29,7 +31,7 @@ public class ContainerMixer extends Container{
 
 		//Liquid 
 		addSlotToContainer(new Slot(tile_entity, 6, 153, 18));
-		addSlotToContainer(new Slot(tile_entity, 7, 153, 54));
+		addSlotToContainer(new SlotClosed(tile_entity, 7, 153, 54));
 
 		
 		int i;

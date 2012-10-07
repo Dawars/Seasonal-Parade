@@ -1,18 +1,14 @@
 package seasonal.parade.halloween.machines;
 
-// You will not need this import if you kept the standard package declaration
 import net.minecraft.src.*;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.ISidedInventory;
 
-// Basically this is where your TileEntity comes from
-// Create a class and extend TileEntity and implement IInventory
-public class TileMixer extends TileEntity implements IInventory{
-	// Then create a ItemStack array (I.E. ItemStack[])
+public class TileMixer extends TileEntity implements IInventory, ISidedInventory{
 	private ItemStack[] inventory;
 	
-	// Then create a super constructor and give the inventory the amount of ItemStacks you want (Slots),
-	// I.E. (for 1 slot: inventory = new ItemStack[1];, for 5 slots: inventory = new ItemStack[5];)
 	public TileMixer(){
-		inventory = new ItemStack[8];
+		inventory = new ItemStack[8]; //8 slots in container: 0, 1, 2, ..., 7
 	}
 	
 	// This returns the inventory size
@@ -99,16 +95,12 @@ public class TileMixer extends TileEntity implements IInventory{
 		return worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) == this == player.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
 	}
 	
-	// A dummy, mostly un-used method, for a check to do something when you open the Gui
 	@Override
 	public void openChest() {}
 	
-	// Another dummy, mostly un-used method, for a check to do something when you close the Gui
 	@Override
 	public void closeChest() {}
 	
-	// This is a really hard method to understand and requires Knowledge of minecrafts NBTTag System, and
-	// All you really need to do is copy it because its pretty much the same for every entity
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
 		super.readFromNBT(tagCompound);
@@ -151,6 +143,34 @@ public class TileMixer extends TileEntity implements IInventory{
 	// This returns the inventory's name
 	@Override
 	public String getInvName(){
-		return "TileEntityTutorial";
+		return "Mixer";
+	}
+	
+	@Override
+    public int getStartInventorySide(ForgeDirection side)
+    {
+        if (side == ForgeDirection.DOWN){
+        	return 4;
+        }
+        
+        if (side == ForgeDirection.UP){
+        	return 0;
+        }
+        
+        return 6;
+    }
+
+	@Override
+	public int getSizeInventorySide(ForgeDirection side){
+		if (side == ForgeDirection.DOWN){
+        	return 1; //There is 1 slot for bottom - for liquid cans started with slotID defined in getStartInventorySide method (slot 4)
+    	}
+        
+        if (side == ForgeDirection.UP){
+        	return 4; //There are 4 slots for top - for ingredients started with slotID defined in getStartInventorySide method (slot 0, 1, 2, 3)
+        }
+        
+        
+        return 1; //There is one slot for sides - for cans started with slotID defined in getStartInventorySide method (slot 6)
 	}
 }
