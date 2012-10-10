@@ -24,13 +24,13 @@ public class GuiMixer extends GuiContainer{
     {
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.mixer"), 14, 6, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
-        String debug = "null";
-        if(tile.canMix())
-        	debug = "true";
-        else
-        	debug = "false";
-        
-        this.fontRenderer.drawString(debug, 60, 6, 4210752);
+//        String debug = "null";
+//        if(tile.canMix())
+//        	debug = "true";
+//        else
+//        	debug = "false";
+//        
+//        this.fontRenderer.drawString(debug, 60, 6, 4210752);
 
     }
 
@@ -52,19 +52,19 @@ public class GuiMixer extends GuiContainer{
         this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.ySize);
 		int var7;
 
-        if (this.tile.isMixing())
-        {
-            var7 = this.tile.getBurnTimeRemainingScaled(12);
-            this.drawTexturedModalRect(var5 + 56, var6 + 36 + 12 - var7, 176, 12 - var7, 14, var7 + 2);
-        }
-
-        var7 = this.tile.getCookProgressScaled(24);
-        this.drawTexturedModalRect(var5 + 79, var6 + 34, 176, 14, var7 + 1, 16);
-		
+//
+//		if (this.tile.isMixing())
+//        {
+//            var7 = this.tile.getBurnTimeRemainingScaled(12);
+//            this.drawTexturedModalRect(var5 + 56, var6 + 36 + 12 - var7, 176, 12 - var7, 14, var7 + 2);
+//        }
+//
+//        var7 = this.tile.getCookProgressScaled(24);
+//        this.drawTexturedModalRect(var5 + 79, var6 + 34, 176, 14, var7 + 1, 16);
 		
 //		Will be for displaying liquids
 //		TileMixer mixer = (TileMixer) tile;
-//		Mixer mixerBlock = ((Mixer) mixer.mixer);
+//		Mixer mixerBlock = ((Mixer) mixer.tile);
 //
 //		if (mixer.getScaledBurnTime(58) > 0)
 //			displayGauge(j, k, 19, 104, mixer.getScaledBurnTime(58), mixerBlock.liquidId);

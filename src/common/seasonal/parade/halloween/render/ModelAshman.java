@@ -1,4 +1,4 @@
-package seasonal.parade.halloween.client;
+package seasonal.parade.halloween.render;
 
 import net.minecraft.src.Entity;
 import net.minecraft.src.MathHelper;

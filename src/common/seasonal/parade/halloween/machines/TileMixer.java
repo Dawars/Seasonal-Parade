@@ -16,8 +16,9 @@ import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 
-public class TileMixer extends TileEntity implements IInventory,
-		ISidedInventory, ITankContainer {
+public class TileMixer extends TileEntity implements IInventory, ISidedInventory
+//		,ITankContainer
+		{
 	private ItemStack[] inventory;
 
 	/** The number of ticks that the mixer will keep mixing */
@@ -50,7 +51,7 @@ public class TileMixer extends TileEntity implements IInventory,
      */
     public int getCookProgressScaled(int par1)
     {
-        return this.mixTime * par1 / 200;
+        return this.mixTime;
     }
 
     @SideOnly(Side.CLIENT)
@@ -62,7 +63,7 @@ public class TileMixer extends TileEntity implements IInventory,
     public int getBurnTimeRemainingScaled(int par1)
     {
 
-        return this.mixTime * par1 / this.mixTime;
+        return this.mixTime;
     }
 
     public boolean isMixing()
@@ -72,9 +73,9 @@ public class TileMixer extends TileEntity implements IInventory,
 
 	@Override
 	public void updateEntity() {
-//		if (this.worldObj.getWorldTime() % 10 == 0 && this.inventory[0] != null)
-//			System.out.println(this.inventory[0].stackSize);
-//		
+//		if (this.worldObj.getWorldTime() % 10 == 0 )
+//			System.out.println(this.mixTime);
+		
 		if (!this.worldObj.isRemote)
         {
 			if(canMix()){
@@ -325,38 +326,67 @@ public class TileMixer extends TileEntity implements IInventory,
 					// defined in getStartInventorySide method (slot 6)
 	}
 
-	/* ILIQUIDCONTAINER */
-	@Override
-	public int fill(Orientations from, LiquidStack resource, boolean doFill) {
-		// if (engine instanceof EngineIron) {
-		// return ((EngineIron) engine).fill(from, resource, doFill);
-		// } else {
-		return 0;
-		// }
-	}
-
-	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public LiquidStack drain(Orientations from, int maxDrain, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public LiquidTank[] getTanks() {
-		// if (mixer == null) {
-		return new LiquidTank[0];
-		// } else {
-		// return mixer.getLiquidSlots();
-		// }
-	}
+	/* ITANKCONTAINER */
+//	public int fill(Orientations from, LiquidStack resource, boolean doFill) {
+//
+//		// Handle coolant
+//		if (IronEngineCoolant.getCoolantForLiquid(resource) != null)
+//			return fillCoolant(from, resource, doFill);
+//
+//		int res = 0;
+//
+//		if (liquidQty > 0 && liquidId != resource.itemID) {
+//			return 0;
+//		}
+//
+//		if (IronEngineFuel.getFuelForLiquid(resource) == null)
+//			return 0;
+//
+//		if (liquidQty + resource.amount <= MAX_LIQUID) {
+//			if (doFill) {
+//				liquidQty += resource.amount;
+//			}
+//
+//			res = resource.amount;
+//		} else {
+//			res = MAX_LIQUID - liquidQty;
+//
+//			if (doFill) {
+//				liquidQty = MAX_LIQUID;
+//			}
+//		}
+//
+//		liquidId = resource.itemID;
+//
+//		return res;
+//	}
+//
+//	private int fillCoolant(Orientations from, LiquidStack resource, boolean doFill) {
+//		int res = 0;
+//
+//		if (coolantQty > 0 && coolantId != resource.itemID)
+//			return 0;
+//
+//		if (coolantQty + resource.amount <= MAX_LIQUID) {
+//			if (doFill)
+//				coolantQty += resource.amount;
+//
+//			res = resource.amount;
+//		} else {
+//			res = MAX_LIQUID - coolantQty;
+//
+//			if (doFill)
+//				coolantQty = MAX_LIQUID;
+//		}
+//
+//		coolantId = resource.itemID;
+//
+//		return res;
+//	}
+//
+//	@Override
+//	public LiquidTank[] getLiquidSlots() {
+//		return new LiquidTank[] { new LiquidTank(liquidId, liquidQty, MAX_LIQUID),
+//				new LiquidTank(coolantId, coolantQty, MAX_LIQUID) };
+//	}
 }

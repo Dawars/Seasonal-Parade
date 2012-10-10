@@ -8,6 +8,7 @@ public class RecipeRegistry{
 		GameRegistry.addRecipe(new ItemStack(Halloween.blockAsh, 1), new Object[]{
 			"AA", "AA", Character.valueOf('A'), Halloween.ashItem
 		});
+		
 //		
 //		GameRegistry.addSmelting(AitS.hematiteOre.blockID, new ItemStack(Item.ingotIron, 1), 0F);
 		

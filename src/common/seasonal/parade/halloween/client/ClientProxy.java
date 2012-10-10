@@ -5,6 +5,9 @@ import java.util.Arrays;
 import seasonal.parade.halloween.common.CommonProxy;
 import seasonal.parade.halloween.common.DefaultProps;
 import seasonal.parade.halloween.render.RenderAshman;
+import seasonal.parade.halloween.render.RenderHeadless;
+import seasonal.parade.halloween.render.TextureRawCandyFX;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.ModelSnowMan;
 import net.minecraft.src.World;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -16,10 +19,13 @@ public class ClientProxy extends CommonProxy {
 		for (String texture : Arrays.asList(
 				DefaultProps.TEXTURE_BLOCKS,
 				DefaultProps.TEXTURE_ITEMS,
+				"/seasonal/parade/halloween/gfx/mob/Horseman.png",
 				DefaultProps.TEXTURE_PATH_GUI + "mixer_gui.png"))
 			MinecraftForgeClient.preloadTexture(texture);
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityAshman.class, new RenderAshman());
+		RenderingRegistry.registerEntityRenderingHandler(EntityHeadless.class, new RenderHeadless());
+		ModLoader.addAnimation(new TextureRawCandyFX());
 	}
 	
 	@Override

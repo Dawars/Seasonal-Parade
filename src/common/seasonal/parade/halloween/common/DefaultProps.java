@@ -16,13 +16,15 @@ public class DefaultProps {
 	public static int WORLD_HEIGHT = 256;
 	public static final String NET_CHANNEL_NAME = "Halloween";
 
+
+
 	public static int NETWORK_UPDATE_RANGE = 128;
 
 	public static String TEXTURE_PATH = "/seasonal/parade/halloween/gfx";
 	
 	public static String TEXTURE_PATH_GUI = TEXTURE_PATH + "/gui";
 	public static String TEXTURE_PATH_BLOCKS = TEXTURE_PATH + "/blocks";
-	public static String TEXTURE_PATH_ENTITIES = TEXTURE_PATH + "/entities";
+	public static String TEXTURE_PATH_ENTITIES = TEXTURE_PATH + "/mob";
 
 	public static String TEXTURE_BLOCKS = TEXTURE_PATH_BLOCKS + "/blocks.png";
 	public static String TEXTURE_ITEMS = TEXTURE_PATH + "/items/items.png";
@@ -44,6 +46,11 @@ public class DefaultProps {
 	
 	//item ids 15200 - 15500
 	public static int ASH_ITEM_ID = 15200;
-	public static int GRAVE_ITEM_ID = 15201;
+	public static int RAW_CANDY_ID = 15201;
+	public static int RAW_CANDY_BUCKET_ID = 15202;
+	public static int RAW_CANDY_CELL_ID = 15203;
+	public static int RAW_CANDY_CAN_ID = 15204;
+	public static int RAW_CANDY_WAX_CAPSULE_ID = 15205;
+	public static int RAW_CANDY_REFRACTORY_CAPSULE_ID = 15206;
 	
 }
