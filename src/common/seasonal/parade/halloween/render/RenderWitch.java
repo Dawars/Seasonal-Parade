@@ -11,23 +11,22 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderHeadless extends RenderLiving
+public class RenderWitch extends RenderLiving
 {
 	/** Scale of the model to use */
     private float scale;
-    public RenderHeadless(float scale)
+    public RenderWitch()
     {
-        super(new ModelHeadless(), 0.5F);
-        this.scale = scale;
+        super(new ModelWitch(), 0.5F);
     }
-    public void renderHeadless(EntityHeadless par1EntityHeadless, double par2, double par4, double par6, float par8, float par9)
+    public void renderHeadless(EntityWitch par1EntityWitch, double par2, double par4, double par6, float par8, float par9)
     {
-        super.doRenderLiving(par1EntityHeadless, par2, par4, par6, par8, par9);
+        super.doRenderLiving(par1EntityWitch, par2, par4, par6, par8, par9);
     }
 
     public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        this.renderHeadless((EntityHeadless)par1EntityLiving, par2, par4, par6, par8, par9);
+        this.renderHeadless((EntityWitch)par1EntityLiving, par2, par4, par6, par8, par9);
     }
 
     /**
@@ -38,23 +37,6 @@ public class RenderHeadless extends RenderLiving
      */
     public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        this.renderHeadless((EntityHeadless)par1Entity, par2, par4, par6, par8, par9);
-    }
-    
-    /**
-     * Applies the scale to the transform matrix
-     */
-    protected void preRenderScale(EntityHeadless par1EntityGiantZombie, float par2)
-    {
-        GL11.glScalef(this.scale, this.scale, this.scale);
-    }
-
-    /**
-     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
-     * entityLiving, partialTickTime
-     */
-    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
-    {
-        this.preRenderScale((EntityHeadless)par1EntityLiving, par2);
+        this.renderHeadless((EntityWitch)par1Entity, par2, par4, par6, par8, par9);
     }
 }

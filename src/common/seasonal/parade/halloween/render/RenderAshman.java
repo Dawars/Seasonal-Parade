@@ -15,8 +15,8 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import seasonal.parade.halloween.client.EntityAshman;
-import seasonal.parade.halloween.common.Halloween;
+import seasonal.parade.halloween.Halloween;
+
 
 @SideOnly(Side.CLIENT)
 public class RenderAshman extends RenderLiving

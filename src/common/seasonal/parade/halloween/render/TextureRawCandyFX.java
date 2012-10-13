@@ -9,13 +9,11 @@
 
 package seasonal.parade.halloween.render;
 
-import seasonal.parade.halloween.common.Halloween;
-
+import seasonal.parade.halloween.Halloween;
 
 public class TextureRawCandyFX extends TextureLiquidsFX {
 
 	public TextureRawCandyFX() {
 		super(210, 235, 210, 235, 155, 155, Halloween.rawCandy.getIconFromDamage(0), Halloween.rawCandy.getTextureFile());
-//		super(210, 238, 210, 238, 210, 238, Halloween.rawCandy.getIconFromDamage(0), Halloween.rawCandy.getTextureFile());
 	}
 }
