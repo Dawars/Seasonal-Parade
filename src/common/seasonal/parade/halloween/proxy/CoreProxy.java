@@ -5,9 +5,14 @@ import java.io.File;
 import java.util.Random;
 
 import seasonal.parade.halloween.network.HalloweenPacket;
+import seasonal.parade.halloween.render.TextureRawCandyFX;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.FMLTextureFX;
+import cpw.mods.fml.client.TextureFXManager;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.Entity;
@@ -26,6 +31,10 @@ public class CoreProxy {
 	@SidedProxy(clientSide="seasonal.parade.halloween.proxy.CoreProxyClient", serverSide="seasonal.parade.halloween.proxy.CoreProxy")
 	public static CoreProxy proxy;
 
+	public Minecraft getClientInstance() {
+	    return FMLClientHandler.instance().getClient();
+    }
+	
 	public String getMinecraftVersion() { return "1.3.2"; }
 
 	/* INSTANCES */
@@ -142,4 +151,6 @@ public class CoreProxy {
 
 		return CoreProxy.buildCraftPlayer;
 	}
+
+	public void addAnimation(Object anim) {}
 }

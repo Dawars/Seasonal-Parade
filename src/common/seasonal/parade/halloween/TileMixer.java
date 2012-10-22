@@ -1,260 +1,218 @@
 package seasonal.parade.halloween;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
+import seasonal.parade.halloween.network.PacketPayload;
+import seasonal.parade.halloween.network.PacketUpdate;
+import seasonal.parade.halloween.proxy.CoreProxy;
 
 import buildcraft.api.core.Orientations;
+import buildcraft.api.core.SafeTimeTracker;
 import buildcraft.api.liquids.ILiquidTank;
 import buildcraft.api.liquids.ITankContainer;
 import buildcraft.api.liquids.LiquidManager;
 import buildcraft.api.liquids.LiquidStack;
 import buildcraft.api.liquids.LiquidTank;
-import net.minecraft.src.*;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.ISidedInventory;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.IInventory;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagList;
+import net.minecraft.src.TileEntity;
 
-public class TileMixer extends TileEntity implements IInventory, ISidedInventory
-//		,ITankContainer
-		{
+public class TileMixer extends HalloweenTile implements ITankContainer, IInventory
+{
+	public static Item[] milkContainers = new Item[]{
+			Item.bucketMilk,
+			Halloween.milkCell,
+			Halloween.milkCan,
+			Halloween.milkWaxCapsule,
+			Halloween.milkRefractoryCapsule
+	};
+	public static Item[] emptyContainers = new Item[]{
+			Item.bucketEmpty,
+			Halloween.cell,
+			Halloween.canEmpty,
+			Halloween.wax_capsule,
+			Halloween.refractory_capsule
+	};
+	public static Item[] ingredients = new Item[]{
+		Item.sugar,
+		Item.slimeBall
+	};
+	
+	private static final float MAX_LIQUID = LiquidManager.BUCKET_VOLUME * 16;
+
 	private ItemStack[] inventory;
 
-	public static int MAX_LIQUID = LiquidManager.BUCKET_VOLUME * 10;
+	private int update = 0;
 	
-	/** The number of ticks that the mixer will keep mixing */
-	public int mixTime = 0; //0 = not running, 200 = running and done -> 0
+    public final ILiquidTank tankMilk = new LiquidTank((int)MAX_LIQUID);
+    public final ILiquidTank tankCandy = new LiquidTank((int)MAX_LIQUID);
+    
+    public int tankCandyID = 0;
+    public int TankCandyID = 1;
+    
+    public boolean hasUpdate = false;
+    public SafeTimeTracker tracker = new SafeTimeTracker();
 
-	
-	private int sugarNumber = 3;
-	private int slimeNumber = 1;
-	
-	
-	public TileMixer() {
-		inventory = new ItemStack[7]; // 8 slots in container: 0, 1, 2, ..., 7
-	}
+    
+    public static <T> boolean contains( final T[] array, final T v ) {
+        for ( final T e : array )
+            if ( e == v || v != null && v.equals( e ) )
+                return true;
 
-	@Override
-	public int getSizeInventory() {
-		return inventory.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slotIndex) {
-		return inventory[slotIndex];
-	}
-	
-	@SideOnly(Side.CLIENT)
-
-    /**
-     * Returns an integer between 0 and the passed value representing how close the current item is to being completely
-     * cooked
-     */
-    public int getCookProgressScaled(int par1)
-    {
-        return this.mixTime;
+        return false;
     }
-
-    @SideOnly(Side.CLIENT)
-
-    /**
-     * Returns an integer between 0 and the passed value representing how much burn time is left on the current fuel
-     * item, where 0 means that the item is exhausted and the passed value means that the item is fresh
-     */
-    public int getBurnTimeRemainingScaled(int par1)
+    /* UPDATING */
+    @Override
+    public void updateEntity()
     {
-
-        return this.mixTime;
-    }
-
-    public boolean isMixing()
-    {
-        return this.mixTime > 0;
-    }
-
-	@Override
-	public void updateEntity() {
-//		if (this.worldObj.getWorldTime() % 10 == 0 )
-//			System.out.println(this.mixTime);
-		
-		if (!this.worldObj.isRemote)
-        {
-			if(canMix()){
-				this.mixTime++;
-			}
+        
+    	update++;
+    	
+    	if(update % 5 == 0){
+    		ItemStack milkslot = getStackInSlot(4);
+    		if(milkslot != null){
+    		
+	    		if(milkslot.getItem() == Item.bucketMilk && this.tankMilk.fill(LiquidStacks.milk, false) == LiquidStacks.milk.amount){
+	    			this.tankMilk.fill(LiquidStacks.milk, true);
+	    			milkslot.stackSize = 1;
+	    			milkslot.itemID = Item.bucketEmpty.shiftedIndex;
+	    		
+	    		}
+	    		
+	    		if(contains(milkContainers, milkslot.getItem())  &&
+		    			this.tankMilk.fill(LiquidStacks.milk, false) == LiquidStacks.milk.amount
+	    			){
+	    			this.tankMilk.fill(LiquidStacks.milk, true);
+	    			decrStackSize(4, 1);
+	    			hasUpdate = true;
+	    			
+	    		}
+	    		
+	    		/*DEBUG FILL CANDY*/
+//	    		if(milkslot.getItem() == Halloween.rawCandyBucket && this.tankCandy.fill(LiquidStacks.rawCandy, false) == LiquidStacks.rawCandy.amount){
+//	    			this.tankCandy.fill(LiquidStacks.rawCandy, true);
+//	    			hasUpdate = true;
+//	    		}
+    		}
+    	
+    	
+	    	//Fill Candy
+			ItemStack emptyCanInSlot = getStackInSlot(5);
+			ItemStack filledCanInSlot = getStackInSlot(6);
 			
-			//when done: reset the timer, decrease the ingredients and add the result
-			if(this.mixTime == 200){
-				this.mixTime = 0;
-				
-				boolean decreasedSugar = false;
-				boolean decreasedSlime= false;
-				for (int i = 0; i < 4; i++){
-					//decrease slime
-					if(this.inventory[i] != null){
-						if(this.inventory[i].itemID == Item.slimeBall.shiftedIndex &&
-								this.inventory[i].stackSize >= slimeNumber){//1 slime
-							this.inventory[i].stackSize -= slimeNumber;
+			if(emptyCanInSlot != null){
+				LiquidStack available = tankCandy.getLiquid();
+	            if(available != null){
+	                ItemStack filled = LiquidManager.fillLiquidContainer(available, emptyCanInSlot);
 	
-				            if (this.inventory[i].stackSize <= 0)
-				            {
-				                this.inventory[i] = null;
-				            }
-				            decreasedSlime = true;
-						}
-					}
-						//decrease slime
-					if(this.inventory[i] != null){
-						if(this.inventory[i].itemID == Item.sugar.shiftedIndex &&
-								this.inventory[i].stackSize >= sugarNumber){//3 sugar
-							this.inventory[i].stackSize -= sugarNumber;
-	
-				            if (this.inventory[i].stackSize <= 0)
-				            {
-				                this.inventory[i] = null;
-				            }
-				            decreasedSugar = true;
-						}
-					}
-					if(decreasedSlime && decreasedSugar)
-						break;
-				}
-				//add result
-				ItemStack stack = new ItemStack(Item.appleRed, 1); //test result is an apple :)
-				
-				if (this.inventory[5] == null)
-	            {
-	                this.inventory[5] = stack.copy();
-	            }
-	            else if (this.inventory[5].isItemEqual(stack))
-	            {
-	            	inventory[5].stackSize += stack.stackSize;
+	                LiquidStack liquid = LiquidManager.getLiquidForFilledItem(filled);
+	               
+	                if(liquid != null && filled != null) {
+	                	if(filledCanInSlot != null && filledCanInSlot.getItem() == filled.getItem()){
+	                		if(filledCanInSlot.stackSize < filledCanInSlot.getItem().getItemStackLimit()){
+		                    	decrStackSize(5, 1);
+		                    	++inventory[6].stackSize;
+			                    tankCandy.drain(liquid.amount, true);
+			                    
+			                    hasUpdate = true;
+	                		}
+	                	}
+	                	
+	                	if(filledCanInSlot == null || filledCanInSlot.stackSize == 0){
+	                		
+	                		decrStackSize(5, 1);
+	                    	setInventorySlotContents(6, filled);
+		                    tankCandy.drain(liquid.amount, true);
+		                    
+		                    hasUpdate = true;
+	                	}
+	                }
 	            }
 			}
-			
-			//if not running reset the timer
-			if(!canMix() && this.mixTime != 0){
-				this.mixTime = 0;
-			}
+    	}
+    	
+    	if(CoreProxy.proxy.isSimulating(worldObj) && hasUpdate && tracker.markTimeIfDelay(worldObj, 2 * Halloween.updateFactor)) {
+            sendNetworkUpdate();
+            hasUpdate = false;
         }
+    }
+    @Override
+    public void onInventoryChanged(){
+    	hasUpdate = true;
+    }
+	public int getScaledMilk(int i) {
+		if(this.tankMilk.getLiquid() == null)
+			return 0;
+		return (int) (((float) this.tankMilk.getLiquid().amount / (float) (MAX_LIQUID)) * i);
 	}
 
-	public boolean canMix() {
-			// if(tank==full){
-			// return false;
-			// }
-			
-			// if(milkTank==empty){
-			// return false;
-			// }
-			
-			//test recipe 1 sugar and 1 slimeball
-			boolean isSugar = false;
-			boolean isSlimeBall = false;
-			
-			for (int i = 0; i < 4; i++){
-
-				if(this.inventory[i] != null){
-					if(this.inventory[i].itemID == Item.sugar.shiftedIndex &&
-							this.inventory[i].stackSize >= sugarNumber){//3 sugar
-						isSugar = true;
-						break;
-					}
-				}
-			}
-			for (int i = 0; i < 4; i++){
-				if(this.inventory[i] != null){
-					if(this.inventory[i].itemID == Item.slimeBall.shiftedIndex &&
-							this.inventory[i].stackSize >= slimeNumber){//1 slime
-						isSlimeBall = true;
-						break;
-					}
-				}
-			}
-			
-			if(isSlimeBall && isSugar)
-				return true;
-		
-		return false;
+	public int getScaledCandy(int i) {
+		if(this.tankCandy.getLiquid() == null)
+			return 0;
+		return (int) (((float) this.tankCandy.getLiquid().amount / (float) (MAX_LIQUID)) * i);
 	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory[slot] = stack;
-		// This checks to make sure the stack is not nothing, and then makes
-		// sure the stack is not going over the limit
-		// Of the stack
-		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-			stack.stackSize = getInventoryStackLimit();
-		}
+    
+    public TileMixer() {
+		inventory = new ItemStack[7]; // 7 slots in container: 0, 1, 2
 	}
+    
+    /* NETWORK */
+    @Override
+    public PacketPayload getPacketPayload()
+    {
+        PacketPayload payload = new PacketPayload(6, 0, 0);
+        if(this.tankMilk.getLiquid() != null) {
+            payload.intPayload[0] = this.tankMilk.getLiquid().itemID;
+            payload.intPayload[1] = this.tankMilk.getLiquid().itemMeta;
+            payload.intPayload[2] = this.tankMilk.getLiquid().amount;
+        } else {
+            payload.intPayload[0] = 0;
+            payload.intPayload[1] = 0;
+            payload.intPayload[2] = 0;
+        }
+        if(this.tankCandy.getLiquid() != null){
+        	payload.intPayload[3] = this.tankCandy.getLiquid().itemID;
+            payload.intPayload[4] = this.tankCandy.getLiquid().itemMeta;
+            payload.intPayload[5] = this.tankCandy.getLiquid().amount;
+    	} else {
+            payload.intPayload[3] = 0;
+            payload.intPayload[4] = 0;
+            payload.intPayload[5] = 0;
+    	}
+        return payload;
+    }
 
-	@Override
-	public ItemStack decrStackSize(int slotIndex, int amount) {
-		// This gets the stack with the slot number you want
-		ItemStack stack = getStackInSlot(slotIndex);
+    @Override
+    public void handleUpdatePacket(PacketUpdate packet)
+    {
+        if(packet.payload.intPayload[0] > 0) {
+            LiquidStack liquidMilk = new LiquidStack(packet.payload.intPayload[0], packet.payload.intPayload[2], packet.payload.intPayload[1]);
+            
+        	this.tankMilk.setLiquid(liquidMilk);
+        } else {
+    		this.tankMilk.setLiquid(null);
+        }
+        if(packet.payload.intPayload[3] > 0) {
+        	LiquidStack liquidCandy = new LiquidStack(packet.payload.intPayload[3], packet.payload.intPayload[5], packet.payload.intPayload[4]);
+        	this.tankCandy.setLiquid(liquidCandy);
+        } else {
+        	this.tankCandy.setLiquid(null);
+        }
+    }
+    
+    
 
-		// Then it checks to make sure it has something in it
-		if (stack != null) {
-			// Then it checks to make sure that it has something that is equal
-			// or lesser than the amount you want to add
-			if (stack.stackSize <= amount) {
-				setInventorySlotContents(slotIndex, null);
-			} else {
-				stack = stack.splitStack(amount);
-				if (stack.stackSize == 0) {
-					setInventorySlotContents(slotIndex, null);
-				}
-			}
-		}
+    /* SAVING & LOADING */
+    @Override
+    public void readFromNBT(NBTTagCompound data)
+    {
+    	super.readFromNBT(data);
 
-		// Then it returns the stack
-		return stack;
-	}
-
-	// This returns the stack in the slot you chose
-	// It has 1 param
-	// @param int slotIndex this is the slot number you choose to get
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slotIndex) {
-		// This gets the stack in the slot you chose
-		ItemStack stack = getStackInSlot(slotIndex);
-
-		// This checks to make sure it has something in it
-		if (stack != null) {
-			setInventorySlotContents(slotIndex, null);
-		}
-
-		// Then it returns the stack
-		return stack;
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) == this == player
-				.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
-	}
-
-	@Override
-	public void openChest() {
-	}
-
-	@Override
-	public void closeChest() {
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tagCompound) {
-		super.readFromNBT(tagCompound);
-
-		NBTTagList tagList = tagCompound.getTagList("Inventory");
+		NBTTagList tagList = data.getTagList("Inventory");
 
 		for (int i = 0; i < tagList.tagCount(); i++) {
 			NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
@@ -265,17 +223,22 @@ public class TileMixer extends TileEntity implements IInventory, ISidedInventory
 				inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
 			}
 		}
-        this.mixTime = tagCompound.getShort("MixTime");
+		
+		LiquidStack liquid = new LiquidStack(0, 0, 0);
+		liquid.readFromNBT(data.getCompoundTag("tank"));
+		this.tankMilk.setLiquid(liquid);
+		
+		LiquidStack liquidCandy = new LiquidStack(0, 0, 0);
+		liquidCandy.readFromNBT(data.getCompoundTag("tankCandy"));
+	    this.tankCandy.setLiquid(liquidCandy);
+    }
 
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tagCompound) {
-		super.writeToNBT(tagCompound);
-		tagCompound.setShort("MixTime", (short)this.mixTime);
-
+    @Override
+    public void writeToNBT(NBTTagCompound data)
+    {
+    	super.writeToNBT(data);
+    	
 		NBTTagList itemList = new NBTTagList();
-
 		for (int i = 0; i < inventory.length; i++) {
 			ItemStack stack = inventory[i];
 
@@ -287,9 +250,131 @@ public class TileMixer extends TileEntity implements IInventory, ISidedInventory
 				itemList.appendTag(tag);
 			}
 		}
+		data.setTag("Inventory", itemList);
 
-		tagCompound.setTag("Inventory", itemList);
 		
+        if(this.tankMilk.getLiquid() != null)
+            data.setTag("tank", this.tankMilk.getLiquid().writeToNBT(new NBTTagCompound()));
+		
+        if(this.tankCandy.getLiquid() != null)
+            data.setTag("tankCandy", this.tankCandy.getLiquid().writeToNBT(new NBTTagCompound()));
+        
+    }
+
+
+    /* ITANKCONTAINER */
+    @Override
+    public int fill(Orientations from, LiquidStack resource, boolean doFill)
+    {
+        return fill(0, resource, doFill);
+    }
+
+    @Override
+    public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+    {
+        if(tankIndex != 0 || resource == null)
+           return 0;
+
+        resource = resource.copy();
+        int totalUsed = 0;
+        if(this != null && resource.amount > 0){
+            int used = this.tankMilk.fill(resource, doFill);
+            resource.amount -= used;
+            if(used>0)
+                this.hasUpdate=true;
+
+            totalUsed += used;
+        }
+        if(totalUsed>0)
+            hasUpdate= true;
+        return totalUsed;
+    }
+
+
+    @Override
+    public LiquidStack drain(Orientations from, int maxEmpty, boolean doDrain)
+    {
+        return drain(0, maxEmpty, doDrain);
+    }
+
+    @Override
+    public LiquidStack drain(int tankIndex, int maxEmpty, boolean doDrain)
+    {
+        this.hasUpdate = true;
+        return this.tankCandy.drain(maxEmpty, doDrain);
+    }
+
+    @Override
+    public ILiquidTank[] getTanks()
+    {
+        ILiquidTank compositeTank = new LiquidTank(this.tankMilk.getCapacity());
+        ILiquidTank compositeTankCandy = new LiquidTank(this.tankCandy.getCapacity());
+
+        
+        int capacity = this.tankMilk.getCapacity();
+        int capacityCandy = this.tankMilk.getCapacity();
+
+        if(this != null && this.tankMilk.getLiquid() != null) {
+            compositeTank.setLiquid(this.tankMilk.getLiquid().copy());//Milk and the other tank is Raw Candy
+        } else if(this != null && this.tankCandy.getLiquid() != null) {
+            compositeTankCandy.setLiquid(this.tankCandy.getLiquid().copy());
+        } else {
+            return new ILiquidTank[]{compositeTank, compositeTankCandy};
+        }
+
+        compositeTank.setCapacity(capacity);
+        compositeTankCandy.setCapacity(capacityCandy);
+        return new ILiquidTank[]{compositeTank, compositeTankCandy};
+    }
+
+    /*IINVENTORY*/
+    
+    @Override
+	public int getSizeInventory() {
+		return inventory.length;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slotIndex) {
+		return inventory[slotIndex];
+	}
+	
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		inventory[slot] = stack;
+		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+			stack.stackSize = getInventoryStackLimit();
+		}
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slotIndex, int amount) {
+		ItemStack stack = getStackInSlot(slotIndex);
+
+		if (stack != null) {
+			if (stack.stackSize <= amount) {
+				setInventorySlotContents(slotIndex, null);
+			} else {
+				stack = stack.splitStack(amount);
+				if (stack.stackSize == 0) {
+					setInventorySlotContents(slotIndex, null);
+				}
+			}
+		}
+
+		return stack;
+	}
+
+	
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slotIndex) {
+		ItemStack stack = getStackInSlot(slotIndex);
+
+		if (stack != null) {
+			setInventorySlotContents(slotIndex, null);
+		}
+
+		return stack;
 	}
 
 	@Override
@@ -298,98 +383,13 @@ public class TileMixer extends TileEntity implements IInventory, ISidedInventory
 	}
 
 	@Override
-	public int getStartInventorySide(ForgeDirection side) {
-		if (side == ForgeDirection.DOWN) {
-			return 4;
-		}
-
-		if (side == ForgeDirection.UP) {
-			return 0;
-		}
-
-		return 6;
+	public int getInventoryStackLimit() {
+		return 64;
 	}
 
-	/* ISidedInventory */
 	@Override
-	public int getSizeInventorySide(ForgeDirection side) {
-		if (side == ForgeDirection.DOWN) {
-			return 1; // There is 1 slot for bottom - for liquid cans started
-						// with slotID defined in getStartInventorySide method
-						// (slot 4)
-		}
+	public void openChest() {}
 
-		if (side == ForgeDirection.UP) {
-			return 4; // There are 4 slots for top - for ingredients started
-						// with slotID defined in getStartInventorySide method
-						// (slot 0, 1, 2, 3)
-		}
-
-		return 1; // There is one slot for sides - for cans started with slotID
-					// defined in getStartInventorySide method (slot 6)
-	}
-
-	/* ITANKCONTAINER */
-//	public int fill(Orientations from, LiquidStack resource, boolean doFill) {
-//
-//		// Handle coolant
-//		if (IronEngineCoolant.getCoolantForLiquid(resource) != null)
-//			return fillCoolant(from, resource, doFill);
-//
-//		int res = 0;
-//
-//		if (liquidQty > 0 && liquidId != resource.itemID) {
-//			return 0;
-//		}
-//
-//		if (IronEngineFuel.getFuelForLiquid(resource) == null)
-//			return 0;
-//
-//		if (liquidQty + resource.amount <= MAX_LIQUID) {
-//			if (doFill) {
-//				liquidQty += resource.amount;
-//			}
-//
-//			res = resource.amount;
-//		} else {
-//			res = MAX_LIQUID - liquidQty;
-//
-//			if (doFill) {
-//				liquidQty = MAX_LIQUID;
-//			}
-//		}
-//
-//		liquidId = resource.itemID;
-//
-//		return res;
-//	}
-//
-//	private int fillCoolant(Orientations from, LiquidStack resource, boolean doFill) {
-//		int res = 0;
-//
-//		if (coolantQty > 0 && coolantId != resource.itemID)
-//			return 0;
-//
-//		if (coolantQty + resource.amount <= MAX_LIQUID) {
-//			if (doFill)
-//				coolantQty += resource.amount;
-//
-//			res = resource.amount;
-//		} else {
-//			res = MAX_LIQUID - coolantQty;
-//
-//			if (doFill)
-//				coolantQty = MAX_LIQUID;
-//		}
-//
-//		coolantId = resource.itemID;
-//
-//		return res;
-//	}
-//
-//	@Override
-//	public LiquidTank[] getLiquidSlots() {
-//		return new LiquidTank[] { new LiquidTank(liquidId, liquidQty, MAX_LIQUID),
-//				new LiquidTank(coolantId, coolantQty, MAX_LIQUID) };
-//	}
+	@Override
+	public void closeChest() {}
 }

@@ -12,6 +12,7 @@ package seasonal.parade.halloween.utils;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import seasonal.parade.halloween.BlockIndex;
 import seasonal.parade.halloween.Halloween;
 import seasonal.parade.halloween.network.ISynchronizedTile;
 import seasonal.parade.halloween.network.PacketUpdate;
@@ -135,19 +136,19 @@ public class Utils {
 
 
 
-//	public static void handleBufferedDescription(ISynchronizedTile tileSynch) {
-//		TileEntity tile = (TileEntity) tileSynch;
-//		BlockIndex index = new BlockIndex(tile.xCoord, tile.yCoord, tile.zCoord);
-//
-//		if (Halloween.bufferedDescriptions.containsKey(index)) {
-//
-//			PacketUpdate payload = Halloween.bufferedDescriptions.get(index);
-//			Halloween.bufferedDescriptions.remove(index);
-//
-//			tileSynch.handleDescriptionPacket(payload);
-//			tileSynch.postPacketHandling(payload);
-//		}
-//	}
+	public static void handleBufferedDescription(ISynchronizedTile tileSynch) {
+		TileEntity tile = (TileEntity) tileSynch;
+		BlockIndex index = new BlockIndex(tile.xCoord, tile.yCoord, tile.zCoord);
+
+		if (Halloween.bufferedDescriptions.containsKey(index)) {
+
+			PacketUpdate payload = Halloween.bufferedDescriptions.get(index);
+			Halloween.bufferedDescriptions.remove(index);
+
+			tileSynch.handleDescriptionPacket(payload);
+			tileSynch.postPacketHandling(payload);
+		}
+	}
 
 	public static int liquidId(int blockId) {
 		if (blockId == Block.waterStill.blockID || blockId == Block.waterMoving.blockID)

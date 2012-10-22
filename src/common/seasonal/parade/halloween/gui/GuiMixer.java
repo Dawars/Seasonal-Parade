@@ -4,39 +4,29 @@ import org.lwjgl.opengl.GL11;
 
 import seasonal.parade.halloween.DefaultProps;
 import seasonal.parade.halloween.TileMixer;
-import net.minecraft.src.*;
+
+import net.minecraft.src.Block;
+import net.minecraft.src.Container;
+import net.minecraft.src.GuiContainer;
+import net.minecraft.src.InventoryPlayer;
+import net.minecraft.src.Item;
 import net.minecraftforge.client.ForgeHooksClient;
 
-public class GuiMixer extends GuiContainer{
-	public TileMixer tile;
-	GuiMixer mixer = this;
-	
-	public GuiMixer(InventoryPlayer player_inventory, TileMixer tile_entity){
-		super(new ContainerMixer(tile_entity, player_inventory));
-		this.tile = tile_entity;
+public class GuiMixer extends HalloweenGui{
+
+	public GuiMixer(InventoryPlayer inventoryplayer, TileMixer mixer) {
+		super(new ContainerMixer(inventoryplayer, mixer), mixer);
 	}
-	
-	 /**
-     * Draw the foreground layer for the GuiContainer (everything in front of the items)
-     */
-    protected void drawGuiContainerForegroundLayer()
-    {
-        this.fontRenderer.drawString(StatCollector.translateToLocal("container.mixer"), 14, 6, 4210752);
-        this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
-//        String debug = "null";
-//        if(tile.canMix())
-//        	debug = "true";
-//        else
-//        	debug = "false";
-//        
-//        this.fontRenderer.drawString(debug, 60, 6, 4210752);
 
-    }
+	@Override
+	protected void drawGuiContainerForegroundLayer() {
+		super.drawGuiContainerForegroundLayer();
+		
+		fontRenderer.drawString("Mixer", 14, 6, 0x404040);
+		fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
+	}
 
-    /**
-     * Draw the background layer for the GuiContainer (everything behind the items)
-     */
-    @Override
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
 		int i = mc.renderEngine.getTexture(DefaultProps.TEXTURE_PATH_GUI + "/mixer_gui.png");
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -45,34 +35,14 @@ public class GuiMixer extends GuiContainer{
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
 
-		//process arrow
-		int var5 = (this.width - this.xSize) / 2;
-        int var6 = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.ySize);
-		int var7;
-
-//
-//		if (this.tile.isMixing())
-//        {
-//            var7 = this.tile.getBurnTimeRemainingScaled(12);
-//            this.drawTexturedModalRect(var5 + 56, var6 + 36 + 12 - var7, 176, 12 - var7, 14, var7 + 2);
-//        }
-//
-//        var7 = this.tile.getCookProgressScaled(24);
-//        this.drawTexturedModalRect(var5 + 79, var6 + 34, 176, 14, var7 + 1, 16);
-		
-//		Will be for displaying liquids
-//		TileMixer mixer = (TileMixer) tile;
-//		Mixer mixerBlock = ((Mixer) mixer.tile);
-//
-//		if (mixer.getScaledBurnTime(58) > 0)
-//			displayGauge(j, k, 19, 104, mixer.getScaledBurnTime(58), mixerBlock.liquidId);
-//
-//		if (mixerBlock.getScaledCoolant(58) > 0)
-//			displayGauge(j, k, 19, 122, mixerBlock.getScaledCoolant(58), mixerBlock.coolantId);
+		TileMixer mixer = (TileMixer) tile;
+		if(mixer.tankMilk.getLiquid() != null)
+			displayGauge(j, k, 21, 59, mixer.getScaledMilk(47), mixer.tankMilk.getLiquid().itemID);
+		if(mixer.tankCandy.getLiquid() != null)
+			displayGauge(j, k, 21, 116, mixer.getScaledCandy(47), mixer.tankCandy.getLiquid().itemID);
 	}
-    
-    private void displayGauge(int j, int k, int line, int col, int squaled, int liquidId) {
+	
+	private void displayGauge(int j, int k, int line, int col, int squaled, int liquidId) {
 		int liquidImgIndex = 0;
 
 		if (liquidId < Block.blocksList.length && Block.blocksList[liquidId] != null) {
@@ -101,7 +71,7 @@ public class GuiMixer extends GuiContainer{
 				squaled = 0;
 			}
 
-			drawTexturedModalRect(j + col, k + line + 58 - x - start, imgColumn * 16, imgLine * 16 + (16 - x), 16, 16 - (16 - x));
+			drawTexturedModalRect(j + col, k + line + 47 - x - start, imgColumn * 16, imgLine * 16 + (16 - x), 16, 16 - (16 - x));
 			start = start + 16;
 
 			if (x == 0 || squaled == 0)

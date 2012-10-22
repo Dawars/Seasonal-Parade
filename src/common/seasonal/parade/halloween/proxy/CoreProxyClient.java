@@ -12,16 +12,21 @@ package seasonal.parade.halloween.proxy;
 import java.io.File;
 import java.util.List;
 
+import seasonal.parade.halloween.render.TextureRawCandyFX;
 import seasonal.parade.halloween.DefaultProps;
 import seasonal.parade.halloween.Halloween;
 import seasonal.parade.halloween.render.EntityAshman;
+import seasonal.parade.halloween.render.EntityEvilPumpkin;
 import seasonal.parade.halloween.render.EntityHeadless;
 import seasonal.parade.halloween.render.EntityWitch;
 import seasonal.parade.halloween.render.RenderAshman;
+import seasonal.parade.halloween.render.RenderEvilPumpkin;
 import seasonal.parade.halloween.render.RenderHeadless;
 import seasonal.parade.halloween.render.RenderWitch;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.FMLTextureFX;
+import cpw.mods.fml.client.TextureFXManager;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
@@ -33,8 +38,10 @@ import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.Packet;
 import net.minecraft.src.StringTranslate;
+import net.minecraft.src.TextureFX;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldClient;
@@ -92,7 +99,7 @@ public class CoreProxyClient extends CoreProxy {
 
 	@Override
 	public void initializeRendering() {
-		
+				
 		Halloween.basketModel = RenderingRegistry.getNextAvailableRenderId();
 		Halloween.mixerModel = RenderingRegistry.getNextAvailableRenderId();
 
@@ -110,6 +117,7 @@ public class CoreProxyClient extends CoreProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityAshman.class, new RenderAshman());
 		RenderingRegistry.registerEntityRenderingHandler(EntityHeadless.class, new RenderHeadless(2));
 		RenderingRegistry.registerEntityRenderingHandler(EntityWitch.class, new RenderWitch());
+//		RenderingRegistry.registerEntityRenderingHandler(EntityEvilPumpkin.class, new RenderEvilPumpkin());
 	}
 
 
@@ -144,6 +152,10 @@ public class CoreProxyClient extends CoreProxy {
 		}
 
 		return CoreProxy.buildCraftPlayer;
+	}
+	
+	public void addAnimation(Object anim) {
+		TextureFXManager.instance().addAnimation((FMLTextureFX)anim);		
 	}
 
 }

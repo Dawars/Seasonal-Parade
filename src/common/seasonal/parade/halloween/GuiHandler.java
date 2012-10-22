@@ -11,9 +11,11 @@ public class GuiHandler implements IGuiHandler{
 
 		TileEntity tile_entity = world.getBlockTileEntity(x, y, z);
 
+		TileMixer mixer = (TileMixer)tile_entity;
+		
 		if(tile_entity instanceof TileMixer){
 			// If it is it returns a new ContainerTutorial instance
-			return new ContainerMixer((TileMixer) tile_entity, player.inventory);
+			return new ContainerMixer(player.inventory, mixer);
 		}
 
 		return null;

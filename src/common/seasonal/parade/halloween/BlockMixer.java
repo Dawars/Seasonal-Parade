@@ -4,9 +4,9 @@ import java.util.Random;
 
 import net.minecraft.src.*;
 
-public class Mixer extends BlockContainer{
-	public Mixer(int blockId, int j){
-		super(blockId, j, Material.rock);
+public class BlockMixer extends BlockContainer{
+	public BlockMixer(int blockId, int j){
+		super(blockId, j, Material.iron);
 		setCreativeTab(CreativeTabs.tabBlock);
 	}
 	

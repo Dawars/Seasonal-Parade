@@ -55,4 +55,10 @@ public class DefaultProps {
 	public static int RAW_CANDY_WAX_CAPSULE_ID = 15205;
 	public static int RAW_CANDY_REFRACTORY_CAPSULE_ID = 15206;
 	
+
+	public static int MILK_CELL_ID = 15307;
+	public static int MILK_CAN_ID = 15308;
+	public static int MILK_WAX_CAPSULE_ID = 15309;
+	public static int MILK_REFRACTORY_CAPSULE_ID = 15310;
+	public static int MILK_ID = 15311;
 }

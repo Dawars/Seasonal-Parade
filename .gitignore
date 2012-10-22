@@ -12,6 +12,8 @@
 *.properties
 CHANGELOG
 
+
+Images and plans/*
 bin/*
 conf/*
 docs/*

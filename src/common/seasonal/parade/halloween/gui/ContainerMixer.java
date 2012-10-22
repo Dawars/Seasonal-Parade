@@ -6,14 +6,13 @@ import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
 
-public class ContainerMixer extends Container{
+public class ContainerMixer extends HalloweenContainer{
 	protected TileMixer tile;
 	
-	int liquidQty = 0;
-	public int liquidId = 0;
-	
-	public ContainerMixer(TileMixer tile, InventoryPlayer player_inventory){
+	public ContainerMixer(InventoryPlayer player_inventory, TileMixer tile) {
+		super(tile.getSizeInventory());
 		this.tile = tile;
+
 		
 		//Input
 		addSlotToContainer(new Slot(tile, 0, 14, 15));
@@ -28,8 +27,8 @@ public class ContainerMixer extends Container{
 		//Proccess
 
 		//Liquid 
-		addSlotToContainer(new Slot(tile, 5, 153, 18));
-		addSlotToContainer(new SlotClosed(tile, 6, 153, 54));
+		addSlotToContainer(new Slot(tile, 5, 143, 21));//Empty Containers
+		addSlotToContainer(new SlotClosed(tile, 6, 143, 56));
 
 		
 		int i;
@@ -48,11 +47,8 @@ public class ContainerMixer extends Container{
         }
 	}
 	
-	// This is required and returns if the player can use this Gui
-	// It has 1 param
-	// @param EntityPlayer, this is the player declaration
 	@Override
-	public boolean canInteractWith(EntityPlayer player){
+	public boolean canInteractWith(EntityPlayer player) {
 		return tile.isUseableByPlayer(player);
 	}
 	
@@ -80,19 +76,19 @@ public class ContainerMixer extends Container{
 
                 var3.onSlotChange(stack, var2);
             } else {
-            	if(stack.itemID == Item.sugar.shiftedIndex || stack.itemID == Item.slimeBall.shiftedIndex){//if ingredients
+            	if(TileMixer.contains(TileMixer.ingredients, stack.getItem())){//if ingredients
 	            	if (!this.mergeItemStack(stack, 0, 4, false))
 	                {
 	                    return null;
 	                }
 	            	var3.onSlotChange(stack, var2);
-            	} else if(stack.itemID == Item.bucketEmpty.shiftedIndex){//if empty bucket (later add capsules and cells...)
+            	} else if(TileMixer.contains(TileMixer.emptyContainers, stack.getItem())){//if empty liquid containers
             		if (!this.mergeItemStack(stack, 5, 6, false))
 	                {
 	                    return null;
 	                }
 	            	var3.onSlotChange(stack, var2);
-            	} else if(stack.itemID == Item.bucketMilk.shiftedIndex){ //filled liquid container
+            	} else if(TileMixer.contains(TileMixer.milkContainers, stack.getItem())){ //filled liquid container
             		if (!this.mergeItemStack(stack, 4, 5, false))
 	                {
 	                    return null;
