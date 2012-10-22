@@ -34,8 +34,13 @@ public class GuiMixer extends HalloweenGui{
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
-
 		TileMixer mixer = (TileMixer) tile;
+		//Arrow
+		if(mixer.isRunning())
+			this.drawTexturedModalRect(j + 85, k + 36, 176, 61, 22, 16);
+		
+		//Tanks
+		
 		if(mixer.tankMilk.getLiquid() != null)
 			displayGauge(j, k, 21, 59, mixer.getScaledMilk(47), mixer.tankMilk.getLiquid().itemID);
 		if(mixer.tankCandy.getLiquid() != null)

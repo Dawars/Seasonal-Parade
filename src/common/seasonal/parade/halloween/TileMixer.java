@@ -20,8 +20,10 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.ISidedInventory;
 
-public class TileMixer extends HalloweenTile implements ITankContainer, IInventory
+public class TileMixer extends HalloweenTile implements ITankContainer, IInventory, ISidedInventory
 {
 	public static Item[] milkContainers = new Item[]{
 			Item.bucketMilk,
@@ -42,6 +44,10 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
 		Item.slimeBall
 	};
 	
+	
+	public static boolean isRunning = false;
+	
+	private static final int MIN_LIQUID_TO_PROCESS = LiquidManager.BUCKET_VOLUME / 2;
 	private static final float MAX_LIQUID = LiquidManager.BUCKET_VOLUME * 16;
 
 	private ItemStack[] inventory;
@@ -69,10 +75,16 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
     @Override
     public void updateEntity()
     {
-        
     	update++;
     	
+    	if(canMix()){
+			if(update % 20 == 0)
+				mix();
+		}
+    	
     	if(update % 5 == 0){
+    		
+    		
     		ItemStack milkslot = getStackInSlot(4);
     		if(milkslot != null){
     		
@@ -140,11 +152,105 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
             hasUpdate = false;
         }
     }
+    public boolean isRunning(){
+    	return this.isRunning;
+    }
+    
+    public void mix(){
+    	int sugarDecreased = 0;
+    	int slimeDecreased = 0;
+    	
+    	//recipe
+    	int sugarAmount = 3;
+    	int slimeAmount = 1;
+    	
+    	for(int i = 0; i < 4; i++){
+    		if(this.inventory[i] == null)
+    			continue;
+    		if(sugarDecreased == sugarAmount && slimeDecreased == slimeAmount){
+    			break;
+    		}
+
+    		if(this.inventory[i].getItem() == Item.sugar && sugarDecreased != sugarAmount){
+    			
+    			if(sugarAmount - sugarDecreased <= this.inventory[i].stackSize){//You can decrease from the current slot the remaining sugar
+    				decrStackSize(i, sugarAmount - sugarDecreased);
+    				sugarDecreased += sugarAmount - sugarDecreased;
+    			} else {//You can't but as many you can you decrease
+    				sugarDecreased += inventory[i].stackSize;
+    				decrStackSize(i, inventory[i].stackSize);
+    			}
+    		} else if(this.inventory[i].getItem() == Item.slimeBall && slimeDecreased != slimeAmount){
+    			
+    			if(slimeAmount - slimeDecreased <= this.inventory[i].stackSize){//You can decrease from the current slot the remaining sugar
+    				decrStackSize(i, slimeAmount - slimeDecreased);
+    				slimeDecreased += slimeAmount - slimeDecreased;
+    			} else {//You can't but as many you can you decrease
+    				slimeDecreased += inventory[i].stackSize;
+    				decrStackSize(i, inventory[i].stackSize);
+    			}
+    		}
+    	}
+    	
+    	tankMilk.drain(MIN_LIQUID_TO_PROCESS, true);
+    	tankCandy.fill(new LiquidStack(Halloween.rawCandy, MIN_LIQUID_TO_PROCESS * 2), true);
+    	hasUpdate = true;
+    	
+    }
+    
+    public boolean canMix(){
+    	if(this.tankMilk.getLiquid() == null){
+    		isRunning = false;
+    		return false;
+    	}
+    	
+    	int sugar = 0;
+    	int slime = 0;
+    	
+    	int milk = this.tankMilk.getLiquid().amount;
+    	int candy = 0;
+    	
+    	if(this.tankCandy.getLiquid() != null)
+    		candy = this.tankCandy.getLiquid().amount;
+    	
+    	
+    	boolean liquidOk = false;
+    	boolean itemOk = false;
+    	
+    	for(int i = 0; i < 4; i++){
+    		if(inventory[i] == null)
+    			continue;
+    		if(inventory[i].getItem() == Item.sugar){
+    			sugar += inventory[i].stackSize;
+    		}
+    		if(inventory[i].getItem() == Item.slimeBall){
+    			slime += inventory[i].stackSize;
+    		}
+    		if(sugar >= 3 && slime >= 1){
+    			itemOk = true;
+    			break;
+    		}
+    	}
+    	
+    	if(milk >= MIN_LIQUID_TO_PROCESS && candy <= MAX_LIQUID - (2 * MIN_LIQUID_TO_PROCESS)){
+    		liquidOk = true;
+    	}
+    	
+    	if(itemOk && liquidOk){
+    		isRunning = true;
+    		return true;
+    	} else {
+    		isRunning = false;
+    		return false;
+    	}
+	}
+    
     @Override
     public void onInventoryChanged(){
     	hasUpdate = true;
     }
-	public int getScaledMilk(int i) {
+	
+    public int getScaledMilk(int i) {
 		if(this.tankMilk.getLiquid() == null)
 			return 0;
 		return (int) (((float) this.tankMilk.getLiquid().amount / (float) (MAX_LIQUID)) * i);
@@ -392,4 +498,38 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
 
 	@Override
 	public void closeChest() {}
+	
+	
+
+	/* ISidedInventory */
+	@Override
+	public int getStartInventorySide(ForgeDirection side) {
+		if (side == ForgeDirection.DOWN) {
+			return 4;
+		}
+
+		if (side == ForgeDirection.UP) {
+			return 0;
+		}
+
+		return 6;
+	}
+	
+	@Override
+	public int getSizeInventorySide(ForgeDirection side) {
+		if (side == ForgeDirection.DOWN) {
+			return 1; // There is 1 slot for bottom - for liquid cans started
+						// with slotID defined in getStartInventorySide method
+						// (slot 4)
+		}
+
+		if (side == ForgeDirection.UP) {
+			return 4; // There are 4 slots for top - for ingredients started
+						// with slotID defined in getStartInventorySide method
+						// (slot 0, 1, 2, 3)
+		}
+
+		return 1; // There is one slot for sides - for cans started with slotID
+					// defined in getStartInventorySide method (slot 6)
+	}
 }
