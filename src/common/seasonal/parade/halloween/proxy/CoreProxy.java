@@ -153,4 +153,6 @@ public class CoreProxy {
 	}
 
 	public void addAnimation(Object anim) {}
+	
+	public void spawnParticle(String particle, double x, double y, double z, double motionX, double motionY, double motionZ){}
 }

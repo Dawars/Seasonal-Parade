@@ -1,5 +1,9 @@
 package seasonal.parade.halloween.gui;
 
+import java.util.Iterator;
+
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
 import seasonal.parade.halloween.SlotClosed;
 import seasonal.parade.halloween.TileMixer;
 import net.minecraft.src.*;
@@ -8,6 +12,8 @@ import net.minecraftforge.common.ISidedInventory;
 
 public class ContainerMixer extends HalloweenContainer{
 	protected TileMixer tile;
+	protected static boolean isRunning = false;
+	
 	
 	public ContainerMixer(InventoryPlayer player_inventory, TileMixer tile) {
 		super(tile.getSizeInventory());
@@ -47,13 +53,51 @@ public class ContainerMixer extends HalloweenContainer{
         }
 	}
 	
+	 public void addCraftingToCrafters(ICrafting par1ICrafting)
+	    {
+	        super.addCraftingToCrafters(par1ICrafting);
+	        if(this.tile.tankMilk.getLiquid() != null){
+		        par1ICrafting.updateCraftingInventoryInfo(this, 0, this.tile.tankMilk.getLiquid().amount);
+	        }
+	        if(this.tile.tankCandy.getLiquid() != null){
+	        	par1ICrafting.updateCraftingInventoryInfo(this, 1, this.tile.tankCandy.getLiquid().amount);
+	        }
+//	        if(this.tile.isRunning)
+//	        	par1ICrafting.updateCraftingInventoryInfo(this, 2, 1);
+//	        else
+//	        	par1ICrafting.updateCraftingInventoryInfo(this, 2, 0);
+	    }
+
+
+	    @SideOnly(Side.CLIENT)
+	    public void updateProgressBar(int par1, int par2)
+	    {
+	        if (par1 == 0)
+	        {
+	        	if(this.tile.tankMilk.getLiquid() != null)
+	        		this.tile.tankMilk.getLiquid().amount = par2;
+	        }
+
+	        if (par1 == 1)
+	        {
+	        	if(this.tile.tankCandy.getLiquid() != null)
+	        		this.tile.tankCandy.getLiquid().amount = par2;//null point exception
+	        }
+
+//	        if (par1 == 2)
+//	        {
+//	        	if(par2 == 1)
+//	        		this.tile.isRunning = true;
+//	        	else
+//	        		this.tile.isRunning = false;
+//	        }
+	    }
+	
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
 		return tile.isUseableByPlayer(player);
 	}
-	
-
-	
+		
 	/**
      * Called to transfer a stack from one inventory to the other eg. when shift clicking.
      */

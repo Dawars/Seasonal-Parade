@@ -7,10 +7,9 @@
  * http://www.mod-buildcraft.com/MMPL-1.0.txt
  */
 
-package seasonal.parade.render;
+package seasonal.parade.halloween.render;
 
 import seasonal.parade.halloween.Halloween;
-import seasonal.parade.halloween.render.TextureLiquidsFX;
 
 public class TextureMilkFX extends TextureLiquidsFX {
 

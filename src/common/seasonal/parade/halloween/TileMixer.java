@@ -57,9 +57,6 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
     public final ILiquidTank tankMilk = new LiquidTank((int)MAX_LIQUID);
     public final ILiquidTank tankCandy = new LiquidTank((int)MAX_LIQUID);
     
-    public int tankCandyID = 0;
-    public int TankCandyID = 1;
-    
     public boolean hasUpdate = false;
     public SafeTimeTracker tracker = new SafeTimeTracker();
 
@@ -74,7 +71,7 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
     /* UPDATING */
     @Override
     public void updateEntity()
-    {
+    {    	
     	update++;
     	
     	if(canMix()){
@@ -100,7 +97,6 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
 	    			){
 	    			this.tankMilk.fill(LiquidStacks.milk, true);
 	    			decrStackSize(4, 1);
-	    			hasUpdate = true;
 	    			
 	    		}
 	    		
@@ -244,11 +240,6 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
     		return false;
     	}
 	}
-    
-    @Override
-    public void onInventoryChanged(){
-    	hasUpdate = true;
-    }
 	
     public int getScaledMilk(int i) {
 		if(this.tankMilk.getLiquid() == null)

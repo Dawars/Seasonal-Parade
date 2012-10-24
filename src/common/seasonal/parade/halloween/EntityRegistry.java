@@ -15,10 +15,10 @@ public class EntityRegistry{
 		cpw.mods.fml.common.registry.EntityRegistry.registerGlobalEntityID(EntityAshman.class, "Ashman", cpw.mods.fml.common.registry.EntityRegistry.findGlobalUniqueEntityId(), 0x45454B, 0x62D420);
 		cpw.mods.fml.common.registry.EntityRegistry.registerModEntity(EntityAshman.class, "Ashman", 0, Halloween.instance, 64, 1, true);
 
-		cpw.mods.fml.common.registry.EntityRegistry.registerGlobalEntityID(EntityHeadless.class, "Headless", cpw.mods.fml.common.registry.EntityRegistry.findGlobalUniqueEntityId(), 0xE28D1C, 0xA1A1A1);
+		cpw.mods.fml.common.registry.EntityRegistry.registerGlobalEntityID(EntityHeadless.class, "Headless", cpw.mods.fml.common.registry.EntityRegistry.findGlobalUniqueEntityId(), 0x000000, 0xE28D1C);
 		cpw.mods.fml.common.registry.EntityRegistry.registerModEntity(EntityHeadless.class, "Headless", 1, Halloween.instance, 64, 1, true);
 
-		cpw.mods.fml.common.registry.EntityRegistry.registerGlobalEntityID(EntityWitch.class, "Witch", cpw.mods.fml.common.registry.EntityRegistry.findGlobalUniqueEntityId(), 0xE28D2C, 0xA1A1A1);
+		cpw.mods.fml.common.registry.EntityRegistry.registerGlobalEntityID(EntityWitch.class, "Witch", cpw.mods.fml.common.registry.EntityRegistry.findGlobalUniqueEntityId(), 0xA3B372, 0x463A52);
 		cpw.mods.fml.common.registry.EntityRegistry.registerModEntity(EntityWitch.class, "Witch", 2, Halloween.instance, 64, 1, true);
 
 //		cpw.mods.fml.common.registry.EntityRegistry.registerGlobalEntityID(EntityEvilPumpkin.class, "EvilPumpkin", cpw.mods.fml.common.registry.EntityRegistry.findGlobalUniqueEntityId(), 0xE28D20, 0xA141A1);

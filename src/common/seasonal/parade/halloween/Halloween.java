@@ -26,8 +26,8 @@ import buildcraft.api.liquids.LiquidStack;
 import seasonal.parade.halloween.network.PacketHandler;
 import seasonal.parade.halloween.network.PacketUpdate;
 import seasonal.parade.halloween.proxy.CoreProxy;
+import seasonal.parade.halloween.render.TextureMilkFX;
 import seasonal.parade.halloween.render.TextureRawCandyFX;
-import seasonal.parade.render.TextureMilkFX;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -216,7 +216,7 @@ public class Halloween {
 	@Init
 	public void initialize(FMLInitializationEvent evt) {
 		new LiquidStacks();
-
+		
 		LiquidManager.liquids.add(new LiquidData(LiquidStacks.rawCandy, new ItemStack(rawCandyBucket), new ItemStack(Item.bucketEmpty)));
 		LiquidManager.liquids.add(new LiquidData(LiquidStacks.milk, new ItemStack(Item.bucketMilk), new ItemStack(Item.bucketEmpty)));
 
@@ -229,11 +229,9 @@ public class Halloween {
 	// Mods-Loaded Method
 		@PostInit
 		public void modsLoaded(FMLPostInitializationEvent evt){
-			CoreProxy.proxy.addAnimation(new TextureRawCandyFX());
 			CoreProxy.proxy.addAnimation(new TextureMilkFX());
-			
-			
-			
+			CoreProxy.proxy.addAnimation(new TextureRawCandyFX());
+						
 			modIC2 = Loader.isModLoaded("IC2");
 			modForestry = Loader.isModLoaded("Forestry");
 

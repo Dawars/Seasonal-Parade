@@ -2,16 +2,26 @@ package seasonal.parade.halloween.render;
 
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntityAIAttackOnCollide;
+import net.minecraft.src.EntityAILookIdle;
+import net.minecraft.src.EntityAIMoveTwardsRestriction;
+import net.minecraft.src.EntityAINearestAttackableTarget;
+import net.minecraft.src.EntityAISwimming;
+import net.minecraft.src.EntityAIWander;
+import net.minecraft.src.EntityAIWatchClosest;
+import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityMob;
-import net.minecraft.src.EntityPotion;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntitySmallFireball;
 import net.minecraft.src.Item;
 import net.minecraft.src.MathHelper;
+import net.minecraft.src.Potion;
+import net.minecraft.src.PotionEffect;
 import net.minecraft.src.World;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 
-public class EntityWitch extends EntityMob
+public class EntityWitch2 extends EntityMob
 {
     /** Random offset used in floating behaviour */
     private float heightOffset = 0.5F;
@@ -20,13 +30,24 @@ public class EntityWitch extends EntityMob
     private int heightOffsetUpdateTime;
     private int field_70846_g;
 
-    public EntityWitch(World par1World)
+    public EntityWitch2(World par1World)
     {
         super(par1World);
         this.texture = "/seasonal/parade/halloween/gfx/mob/Witch.png";
-        this.isImmuneToFire = true;
         this.attackStrength = 6;
         this.experienceValue = 10;
+        this.getNavigator().setAvoidsWater(true);
+        
+        this.tasks.addTask(0, new EntityAIMoveTwardsRestriction(this, this.moveSpeed));
+        
+        this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, this.moveSpeed, false));
+
+        this.tasks.addTask(2, new EntityAIWander(this, this.moveSpeed));
+        this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(4, new EntityAILookIdle(this));
+        
+        this.targetTasks.addTask(0, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 16.0F, 0, true));
+
     }
 
     public int getMaxHealth()
@@ -45,7 +66,7 @@ public class EntityWitch extends EntityMob
      */
     protected String getLivingSound()
     {
-        return "mob.witch.idle";
+        return "mob.blaze.breathe";
     }
 
     /**
@@ -53,7 +74,7 @@ public class EntityWitch extends EntityMob
      */
     protected String getHurtSound()
     {
-        return "mob.witch.hurt";
+        return "mob.blaze.hit";
     }
 
     /**
@@ -61,7 +82,7 @@ public class EntityWitch extends EntityMob
      */
     protected String getDeathSound()
     {
-        return "mob.witch.death";
+        return "mob.blaze.death";
     }
 
     @SideOnly(Side.CLIENT)
@@ -105,10 +126,6 @@ public class EntityWitch extends EntityMob
             }
         }
 
-        if (this.rand.nextInt(24) == 0)
-        {
-            this.worldObj.playSoundEffect(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, "fire.fire", 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F);
-        }
 
         if (!this.onGround && this.motionY < 0.0D)
         {
@@ -117,10 +134,7 @@ public class EntityWitch extends EntityMob
 
         for (int var1 = 0; var1 < 2; ++var1)
         {
-        	
-//        	this.worldObj.spawnParticle("witchMagic", this.posX + this.rand.nextGaussian() * 0.1299999952316284D, this.D.e + 0.5D + this.rand.nextGaussian() * 0.1299999952316284D, this.v + this.rand.nextGaussian() * 0.1299999952316284D, 0.0D, 0.0D, 0.0D);
-        	this.worldObj.spawnParticle("witchMagic", this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 1.0D);
-//        	this.worldObj.spawnParticle("largesmoke", this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 1.0D);
+            this.worldObj.spawnParticle("largesmoke", this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
         }
 
         super.onLivingUpdate();
@@ -149,7 +163,6 @@ public class EntityWitch extends EntityMob
                 if (this.field_70846_g == 1)
                 {
                     this.attackTime = 60;
-                    this.func_70844_e(true);
                 }
                 else if (this.field_70846_g <= 4)
                 {
@@ -159,21 +172,19 @@ public class EntityWitch extends EntityMob
                 {
                     this.attackTime = 100;
                     this.field_70846_g = 0;
-                    this.func_70844_e(false);
                 }
 
                 if (this.field_70846_g > 1)
                 {
                     float var9 = MathHelper.sqrt_float(par2) * 0.5F;
-//                    this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+                    this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
 
-                    for (int var10 = 0; var10 < 1; ++var10)
-                    {
+//                    for (int var10 = 0; var10 < 1; ++var10)
+//                    {
 //                        EntitySmallFireball var11 = new EntitySmallFireball(this.worldObj, this, var3 + this.rand.nextGaussian() * (double)var9, var5, var7 + this.rand.nextGaussian() * (double)var9);
-                        EntityPotion var11 = new EntityPotion(this.worldObj, this, rand.nextInt(3*9+3));
-                        var11.posY = this.posY + (double)(this.height / 2.0F) + 0.5D;
-                        this.worldObj.spawnEntityInWorld(var11);
-                    }
+//                        var11.posY = this.posY + (double)(this.height / 2.0F) + 0.5D;
+//                        this.worldObj.spawnEntityInWorld(var11);
+//                    }
                 }
             }
 
@@ -181,7 +192,40 @@ public class EntityWitch extends EntityMob
             this.hasAttacked = true;
         }
     }
-
+//
+//    public boolean attackEntityAsMob(Entity par1Entity)
+//    {
+//        if (super.attackEntityAsMob(par1Entity))
+//        {
+//            if (par1Entity instanceof EntityLiving)
+//            {
+//                byte var2 = 0;
+//
+//                if (this.worldObj.difficultySetting > 1)
+//                {
+//                    if (this.worldObj.difficultySetting == 2)
+//                    {
+//                        var2 = 7;
+//                    }
+//                    else if (this.worldObj.difficultySetting == 3)
+//                    {
+//                        var2 = 15;
+//                    }
+//                }
+//
+//                if (var2 > 0)
+//                {
+//                    ((EntityLiving)par1Entity).addPotionEffect(new PotionEffect(Potion.poison.id, var2 * 20, 0));
+//                }
+//            }
+//
+//            return true;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
     /**
      * Called when the mob is falling. Calculates and applies fall damage.
      */
@@ -194,14 +238,6 @@ public class EntityWitch extends EntityMob
     {
         return Item.blazeRod.shiftedIndex;
     }
-
-    /**
-     * Returns true if the entity is on fire. Used by render to add the fire effect on rendering.
-     */
-//    public boolean isBurning()
-//    {
-//        return this.func_70845_n();
-//    }
 
     /**
      * Drop 0-2 items of this living's type
@@ -219,26 +255,6 @@ public class EntityWitch extends EntityMob
         }
     }
 
-//    public boolean func_70845_n()
-//    {
-//        return (this.dataWatcher.getWatchableObjectByte(16) & 1) != 0;
-//    }
-
-    public void func_70844_e(boolean par1)
-    {
-        byte var2 = this.dataWatcher.getWatchableObjectByte(16);
-
-        if (par1)
-        {
-            var2 = (byte)(var2 | 1);
-        }
-        else
-        {
-            var2 &= -2;
-        }
-
-        this.dataWatcher.updateObject(16, Byte.valueOf(var2));
-    }
 
     /**
      * Checks to make sure the light is not too bright where the mob is spawning
