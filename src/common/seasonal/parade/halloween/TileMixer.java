@@ -74,17 +74,23 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
     @Override
     public void updateEntity()
     {    	
-    	
-    	
-//    	if(worldObj.isRemote) return;
-    	
     	update++;
+    	if(CoreProxy.proxy.isSimulating(worldObj) && hasUpdate && tracker.markTimeIfDelay(worldObj, 2 * Halloween.updateFactor)) {
+            sendNetworkUpdate();
+            hasUpdate = false;
+        }
     	
+		
+		
+        if(CoreProxy.proxy.isRenderWorld(worldObj)) {
+            return;
+        }
+            	
     	if(canMix()){
 			if(update % 20 == 0)
 				mix();
 		}
-    	
+	
     	if(update % 5 == 0){
     		
     		
@@ -105,12 +111,6 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
 	    			decrStackSize(4, 1);
 	    			
 	    		}
-	    		
-	    		/*DEBUG FILL CANDY*/
-//	    		if(milkslot.getItem() == Halloween.rawCandyBucket && this.tankCandy.fill(LiquidStacks.rawCandy, false) == LiquidStacks.rawCandy.amount){
-//	    			this.tankCandy.fill(LiquidStacks.rawCandy, true);
-//	    			hasUpdate = true;
-//	    		}
     		}
     	
     	
@@ -132,7 +132,8 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
 		                    	++inventory[6].stackSize;
 			                    tankCandy.drain(liquid.amount, true);
 			                    
-			                    hasUpdate = true;
+			                    if(CoreProxy.proxy.isSimulating(worldObj))
+			                    	hasUpdate = true;
 	                		}
 	                	}
 	                	
@@ -142,17 +143,15 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
 	                    	setInventorySlotContents(6, filled);
 		                    tankCandy.drain(liquid.amount, true);
 		                    
-		                    hasUpdate = true;
+		                    if(CoreProxy.proxy.isSimulating(worldObj))
+		                    	hasUpdate = true;
 	                	}
 	                }
 	            }
 			}
+	    	
     	}
     	
-    	if(CoreProxy.proxy.isSimulating(worldObj) && hasUpdate && tracker.markTimeIfDelay(worldObj, 2 * Halloween.updateFactor)) {
-            sendNetworkUpdate();
-            hasUpdate = false;
-        }
     	
     }
     
