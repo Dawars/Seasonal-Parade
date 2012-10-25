@@ -33,7 +33,7 @@ public abstract class HalloweenContainer extends Container {
 	  }
 	
 	@Override
-	public ItemStack transferStackInSlot(int i) {
+	public ItemStack func_82846_b(EntityPlayer par1EntityPlayer, int i){
 		ItemStack itemstack = null;
 		Slot slot = (Slot) inventorySlots.get(i);
 		if (slot != null && slot.getHasStack()) {

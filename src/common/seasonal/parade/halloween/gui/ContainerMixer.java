@@ -2,6 +2,8 @@ package seasonal.parade.halloween.gui;
 
 import java.util.Iterator;
 
+import buildcraft.api.liquids.LiquidStack;
+
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import seasonal.parade.halloween.SlotClosed;
@@ -53,35 +55,73 @@ public class ContainerMixer extends HalloweenContainer{
         }
 	}
 	
-	 public void addCraftingToCrafters(ICrafting par1ICrafting)
+	 public void addCraftingToCrafters(ICrafting iCrafting)
 	    {
-	        super.addCraftingToCrafters(par1ICrafting);
+	        super.addCraftingToCrafters(iCrafting);
 	        if(this.tile.tankMilk.getLiquid() != null){
-		        par1ICrafting.updateCraftingInventoryInfo(this, 0, this.tile.tankMilk.getLiquid().amount);
+	        	iCrafting.updateCraftingInventoryInfo(this, 0, this.tile.tankMilk.getLiquid().amount);
+	        } else {
+	        	iCrafting.updateCraftingInventoryInfo(this, 0, 0);
 	        }
+	        
+	        if(this.tile.tankMilk.getLiquid() != null){
+	        	iCrafting.updateCraftingInventoryInfo(this, 1, this.tile.tankMilk.getLiquid().itemID);
+	        } else {
+	        	iCrafting.updateCraftingInventoryInfo(this, 1, 0);
+	        }
+	        
 	        if(this.tile.tankCandy.getLiquid() != null){
-	        	par1ICrafting.updateCraftingInventoryInfo(this, 1, this.tile.tankCandy.getLiquid().amount);
+	        	iCrafting.updateCraftingInventoryInfo(this, 2, this.tile.tankCandy.getLiquid().amount);
+	        } else {
+	        	iCrafting.updateCraftingInventoryInfo(this, 2, 0);
 	        }
-//	        if(this.tile.isRunning)
-//	        	par1ICrafting.updateCraftingInventoryInfo(this, 2, 1);
-//	        else
-//	        	par1ICrafting.updateCraftingInventoryInfo(this, 2, 0);
+	        
+	        if(this.tile.tankCandy.getLiquid() != null){
+	        	iCrafting.updateCraftingInventoryInfo(this, 3, this.tile.tankCandy.getLiquid().itemID);
+	        } else {
+	        	iCrafting.updateCraftingInventoryInfo(this, 3, 0);
+	        }
 	    }
 
-
 	    @SideOnly(Side.CLIENT)
-	    public void updateProgressBar(int par1, int par2)
+	    public void updateProgressBar(int id, int data)
 	    {
-	        if (par1 == 0)
+	        switch(id)
 	        {
-	        	if(this.tile.tankMilk.getLiquid() != null)
-	        		this.tile.tankMilk.getLiquid().amount = par2;
-	        }
+	        	//Milk
+	        
+		        case 0:
+		        	if(this.tile.tankMilk.getLiquid() != null){
+		        		this.tile.tankMilk.getLiquid().amount = data;
+		        	} else {//Add Milk id by default
+		        		this.tile.tankMilk.setLiquid(new LiquidStack(0, data));
+		        	}
+		        break;
+		        case 1:
+		        	if(this.tile.tankMilk.getLiquid() != null){
+		        		this.tile.tankMilk.getLiquid().itemID = data;
+		        	} else {//Add Milk id by default
+		        		this.tile.tankMilk.setLiquid(new LiquidStack(data, 0));
+		        	}
+	        	break;
+	        	
+	        	//Candy
+	        	
+		        case 2:
+		        	if(this.tile.tankCandy.getLiquid() != null){
+		        		this.tile.tankCandy.getLiquid().amount = data;
+		        	} else {//Add Milk id by default
+		        		this.tile.tankCandy.setLiquid(new LiquidStack(0, data));
+		        	}
+	        	break;
+		        case 3:
+		        	if(this.tile.tankCandy.getLiquid() != null){
+		        		this.tile.tankCandy.getLiquid().itemID = data;
+		        	} else {//Add Milk id by default
+		        		this.tile.tankCandy.setLiquid(new LiquidStack(data, 0));
+		        	}
+	        	break;
 
-	        if (par1 == 1)
-	        {
-	        	if(this.tile.tankCandy.getLiquid() != null)
-	        		this.tile.tankCandy.getLiquid().amount = par2;//null point exception
 	        }
 
 //	        if (par1 == 2)
@@ -101,7 +141,7 @@ public class ContainerMixer extends HalloweenContainer{
 	/**
      * Called to transfer a stack from one inventory to the other eg. when shift clicking.
      */
-    public ItemStack transferStackInSlot(int slotID)
+	public ItemStack func_82846_b(EntityPlayer par1EntityPlayer, int slotID)
     {
         ItemStack var2 = null;
         Slot var3 = (Slot)this.inventorySlots.get(slotID);
@@ -156,7 +196,7 @@ public class ContainerMixer extends HalloweenContainer{
                 return null;
             }
 
-            var3.onPickupFromSlot(stack);
+            var3.func_82870_a(par1EntityPlayer, stack);
         }
 
         return var2;

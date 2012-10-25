@@ -25,7 +25,6 @@ public class EntityWitch extends EntityMob
         super(par1World);
         this.texture = "/seasonal/parade/halloween/gfx/mob/Witch.png";
         this.isImmuneToFire = true;
-        this.attackStrength = 6;
         this.experienceValue = 10;
     }
 
@@ -246,5 +245,12 @@ public class EntityWitch extends EntityMob
     protected boolean isValidLightLevel()
     {
         return true;
+    }
+    
+    /**
+     * Probably attack strength*/
+    public int func_82193_c(Entity par1Entity)
+    {
+        return 4;
     }
 }

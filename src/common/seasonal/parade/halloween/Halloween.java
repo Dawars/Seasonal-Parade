@@ -42,7 +42,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(name="Halloween mod", version=Version.VERSION, useMetadata = false, modid = "SeasonalParade|Halloween", dependencies="required-after:Forge@[4.2.5,)")
+@Mod(name="Halloween mod", version=Version.VERSION, useMetadata = false, modid = "SeasonalParade|Halloween", dependencies="required-after:Forge@[6.0.0,)")
 @NetworkMod(channels = {DefaultProps.NET_CHANNEL_NAME}, packetHandler = PacketHandler.class, clientSideRequired = true, serverSideRequired = true)
 public class Halloween {
 
@@ -55,7 +55,7 @@ public class Halloween {
 	
 	public static TreeMap<BlockIndex, PacketUpdate> bufferedDescriptions = new TreeMap<BlockIndex, PacketUpdate>();
 	
-	public static HalloweenConfiguration mainConfiguration;
+//	public static HalloweenConfiguration mainConfiguration;
 
 	
 	public static int basketModel;
@@ -110,15 +110,18 @@ public class Halloween {
 		NetworkRegistry.instance().registerGuiHandler(this, guiHandler);
 		GameRegistry.registerTileEntity(TileMixer.class, "Mixer");
 		
+		
+		GameRegistry.registerWorldGenerator(new HalloweenWorldGenerator());
+		
 		GameRegistry.addBiome(Halloween);
 		
 //		Version.versionCheck();
 
 
-		mainConfiguration = new HalloweenConfiguration(new File(evt.getModConfigurationDirectory(), "halloween/main.conf"));
+//		mainConfiguration = new HalloweenConfiguration(new File(evt.getModConfigurationDirectory(), "halloween/main.conf"));
 		try
 		{
-			mainConfiguration.load();
+//			mainConfiguration.load();
 
 			
 //			Property trackNetwork = Halloween.mainConfiguration.getOrCreateBooleanProperty("trackNetworkUsage", Configuration.CATEGORY_GENERAL, false);
@@ -210,7 +213,7 @@ public class Halloween {
 		}
 		finally
 		{
-			mainConfiguration.save();
+//			mainConfiguration.save();
 		}
 	}
 	@Init

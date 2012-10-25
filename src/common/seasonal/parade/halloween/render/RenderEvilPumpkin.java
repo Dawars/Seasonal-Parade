@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLiving;
+import net.minecraft.src.ModelMagmaCube;
 import net.minecraft.src.RenderLiving;
 
 import org.lwjgl.opengl.GL11;

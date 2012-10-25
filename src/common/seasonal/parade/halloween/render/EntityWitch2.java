@@ -34,7 +34,6 @@ public class EntityWitch2 extends EntityMob
     {
         super(par1World);
         this.texture = "/seasonal/parade/halloween/gfx/mob/Witch.png";
-        this.attackStrength = 6;
         this.experienceValue = 10;
         this.getNavigator().setAvoidsWater(true);
         
@@ -262,5 +261,10 @@ public class EntityWitch2 extends EntityMob
     protected boolean isValidLightLevel()
     {
         return true;
+    }
+    
+    public int func_82193_c(Entity par1Entity)
+    {
+        return 6;
     }
 }

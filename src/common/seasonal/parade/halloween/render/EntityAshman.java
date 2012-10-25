@@ -10,13 +10,16 @@ import net.minecraft.src.EntityAINearestAttackableTarget;
 import net.minecraft.src.EntityAIWander;
 import net.minecraft.src.EntityAIWatchClosest;
 import net.minecraft.src.EntityGolem;
+import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityMob;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntitySnowball;
+import net.minecraft.src.IRangedAttackMob;
 import net.minecraft.src.Item;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
 
-public class EntityAshman extends EntityGolem
+public class EntityAshman extends EntityGolem implements IRangedAttackMob
 {
     public EntityAshman(World par1World)
     {
@@ -101,4 +104,16 @@ public class EntityAshman extends EntityGolem
         this.dropItem(Halloween.evilPumpkin.blockID, 1);
 
     }
+
+	@Override
+	public void func_82196_d(EntityLiving var1) {
+		EntitySnowball var2 = new EntitySnowball(this.worldObj, this);
+        double var3 = var1.posX - this.posX;
+        double var5 = var1.posY + (double)var1.getEyeHeight() - 1.100000023841858D - var2.posY;
+        double var7 = var1.posZ - this.posZ;
+        float var9 = MathHelper.sqrt_double(var3 * var3 + var7 * var7) * 0.2F;
+        var2.setThrowableHeading(var3, var5 + (double)var9, var7, 1.6F, 12.0F);
+        this.worldObj.playSoundAtEntity(this, "random.bow", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+        this.worldObj.spawnEntityInWorld(var2);
+	}
 }

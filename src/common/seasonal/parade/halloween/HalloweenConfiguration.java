@@ -24,12 +24,12 @@ public class HalloweenConfiguration extends Configuration {
 	public void save() {
 		Property versionProp = null;
 
-		if (!generalProperties.containsKey("version")) {
-			versionProp = new Property();
-			versionProp.setName("version");
-			generalProperties.put("version", versionProp);
-		} else
-			versionProp = generalProperties.get("version");
+//		if (!generalProperties.containsKey("version")) {
+//			versionProp = new Property();
+//			versionProp.setName("version");
+//			generalProperties.put("version", versionProp);
+//		} else
+//			versionProp = generalProperties.get("version");
 
 		versionProp.value = Version.VERSION;
 

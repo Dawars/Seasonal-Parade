@@ -1,5 +1,6 @@
 package seasonal.parade.halloween.render;
 
+import net.minecraft.src.Entity;
 import net.minecraft.src.EntityAIAttackOnCollide;
 import net.minecraft.src.EntityAIBreakDoor;
 import net.minecraft.src.EntityAIHurtByTarget;
@@ -25,7 +26,6 @@ public class EntityHeadless extends EntityMob
         super(par1World);
         this.texture = "/seasonal/parade/halloween/gfx/mob/Horseman.png";
         this.moveSpeed = 0.23F;
-        this.attackStrength = 4;
         this.getNavigator().getAvoidsWater();
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, this.moveSpeed, false));
         this.tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityVillager.class, this.moveSpeed, true));
@@ -68,5 +68,10 @@ public class EntityHeadless extends EntityMob
     public EnumCreatureAttribute getCreatureAttribute()
     {
         return EnumCreatureAttribute.UNDEAD;
+    }
+    
+    public int func_82193_c(Entity par1Entity)
+    {
+        return 4;
     }
 }

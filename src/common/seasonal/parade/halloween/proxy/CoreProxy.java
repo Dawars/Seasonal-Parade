@@ -129,29 +129,9 @@ public class CoreProxy {
 	protected static EntityPlayer buildCraftPlayer;
 
 	public String playerName() { return ""; }
-	private EntityPlayer createNewPlayer(World world) {
-		return new EntityPlayer(world) {
 
-			@Override
-			public void sendChatToPlayer(String var1) {
-			}
 
-			@Override
-			public boolean canCommandSenderUseCommand(String var1) {
-				return false;
-			}
-
-		};
-	}
-
-	public EntityPlayer getBuildCraftPlayer(World world) {
-		if (CoreProxy.buildCraftPlayer == null) {
-			CoreProxy.buildCraftPlayer = createNewPlayer(world);
-		}
-
-		return CoreProxy.buildCraftPlayer;
-	}
-
+	
 	public void addAnimation(Object anim) {}
 	
 	public void spawnParticle(String particle, double x, double y, double z, double motionX, double motionY, double motionZ){}

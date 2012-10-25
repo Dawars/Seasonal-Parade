@@ -163,21 +163,6 @@ public class CoreProxyClient extends CoreProxy {
 		return FMLClientHandler.instance().getClient().thePlayer.username;
 	}
 
-	private EntityPlayer createNewPlayer(World world) {
-		return new EntityPlayer(world) {
-			@Override public void sendChatToPlayer(String var1) {}
-			@Override public boolean canCommandSenderUseCommand(String var1) { return false; }
-		};
-	}
-
-	@Override
-	public EntityPlayer getBuildCraftPlayer(World world) {
-		if (CoreProxy.buildCraftPlayer == null) {
-			CoreProxy.buildCraftPlayer = createNewPlayer(world);
-		}
-
-		return CoreProxy.buildCraftPlayer;
-	}
 	
 	@Override
 	public void addAnimation(Object anim) {

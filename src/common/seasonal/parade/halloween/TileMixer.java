@@ -2,6 +2,7 @@ package seasonal.parade.halloween;
 
 import java.util.List;
 
+import seasonal.parade.halloween.gui.ContainerMixer;
 import seasonal.parade.halloween.network.PacketPayload;
 import seasonal.parade.halloween.network.PacketUpdate;
 import seasonal.parade.halloween.proxy.CoreProxy;
@@ -14,6 +15,7 @@ import buildcraft.api.liquids.LiquidManager;
 import buildcraft.api.liquids.LiquidStack;
 import buildcraft.api.liquids.LiquidTank;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ICrafting;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -72,6 +74,10 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
     @Override
     public void updateEntity()
     {    	
+    	
+    	
+//    	if(worldObj.isRemote) return;
+    	
     	update++;
     	
     	if(canMix()){
@@ -147,7 +153,9 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
             sendNetworkUpdate();
             hasUpdate = false;
         }
+    	
     }
+    
     public boolean isRunning(){
     	return this.isRunning;
     }
@@ -436,31 +444,56 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
 		return inventory[slotIndex];
 	}
 	
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory[slot] = stack;
-		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-			stack.stackSize = getInventoryStackLimit();
-		}
-	}
+	/**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
+    {
+        this.inventory[par1] = par2ItemStack;
 
-	@Override
-	public ItemStack decrStackSize(int slotIndex, int amount) {
-		ItemStack stack = getStackInSlot(slotIndex);
+        if (par2ItemStack != null && par2ItemStack.stackSize > this.getInventoryStackLimit())
+        {
+            par2ItemStack.stackSize = this.getInventoryStackLimit();
+        }
 
-		if (stack != null) {
-			if (stack.stackSize <= amount) {
-				setInventorySlotContents(slotIndex, null);
-			} else {
-				stack = stack.splitStack(amount);
-				if (stack.stackSize == 0) {
-					setInventorySlotContents(slotIndex, null);
-				}
-			}
-		}
+        this.onInventoryChanged();
+    }
 
-		return stack;
-	}
+    /**
+     * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a
+     * new stack.
+     */
+    public ItemStack decrStackSize(int par1, int par2)
+    {
+        if (this.inventory[par1] != null)
+        {
+            ItemStack var3;
+
+            if (this.inventory[par1].stackSize <= par2)
+            {
+                var3 = this.inventory[par1];
+                this.inventory[par1] = null;
+                this.onInventoryChanged();
+                return var3;
+            }
+            else
+            {
+                var3 = this.inventory[par1].splitStack(par2);
+
+                if (this.inventory[par1].stackSize == 0)
+                {
+                    this.inventory[par1] = null;
+                }
+
+                this.onInventoryChanged();
+                return var3;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
 
 	
 	@Override
