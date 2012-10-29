@@ -130,9 +130,7 @@ public class CoreProxy {
 
 	public String playerName() { return ""; }
 
-
-	
-	public void addAnimation(Object anim) {}
-	
 	public void spawnParticle(String particle, double x, double y, double z, double motionX, double motionY, double motionZ){}
+
+	public void addAnimation() {}
 }
