@@ -9,10 +9,8 @@
 
 package seasonal.parade.halloween.render;
 
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
 import seasonal.parade.halloween.Halloween;
-@SideOnly(Side.CLIENT)
+
 public class TextureRawCandyFX extends TextureLiquidsFX {
 
 	public TextureRawCandyFX() {

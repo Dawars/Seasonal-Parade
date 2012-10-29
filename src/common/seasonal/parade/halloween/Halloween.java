@@ -263,7 +263,8 @@ public class Halloween {
 	// Mods-Loaded Method
 	@PostInit
 	public void modsLoaded(FMLPostInitializationEvent evt){
-		CoreProxy.proxy.addAnimation();
+		CoreProxy.proxy.addAnimation(new TextureMilkFX());
+		CoreProxy.proxy.addAnimation(new TextureRawCandyFX());
 				
 		modIC2 = Loader.isModLoaded("IC2");
 		modForestry = Loader.isModLoaded("Forestry");
@@ -327,7 +328,6 @@ public class Halloween {
 
     }
 	public String getPriorities() {
-		return "after:mod_IC2;after:mod_BuildCraftCore;after:mod_BuildCraftEnergy;after:mod_BuildCraftFactory;after:mod_BuildCraftSilicon;after:mod_BuildCraftTransport;after:mod_RedPowerWorld;" +
-				"before:Railcraft";
+		return "after:mod_IC2;after:mod_BuildCraftCore;after:mod_BuildCraftEnergy;after:mod_BuildCraftFactory;after:mod_BuildCraftSilicon;after:mod_BuildCraftTransport;after:mod_RedPowerWorld";
 	}
 }
