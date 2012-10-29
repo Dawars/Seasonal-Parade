@@ -23,6 +23,7 @@ import seasonal.parade.halloween.render.RenderAshman;
 import seasonal.parade.halloween.render.RenderEvilPumpkin;
 import seasonal.parade.halloween.render.RenderHeadless;
 import seasonal.parade.halloween.render.RenderWitch;
+import seasonal.parade.halloween.render.TextureMilkFX;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.FMLTextureFX;
@@ -165,8 +166,9 @@ public class CoreProxyClient extends CoreProxy {
 
 	
 	@Override
-	public void addAnimation(Object anim) {
-		TextureFXManager.instance().addAnimation((FMLTextureFX)anim);
+	public void addAnimation() {		
+		TextureFXManager.instance().addAnimation((FMLTextureFX)new TextureMilkFX());
+		TextureFXManager.instance().addAnimation((FMLTextureFX)new TextureRawCandyFX());
 	}
 	@Override
 	public void spawnParticle(String particle, double x, double y, double z, double motionX, double motionY, double motionZ){
