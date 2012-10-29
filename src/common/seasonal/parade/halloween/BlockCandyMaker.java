@@ -2,12 +2,24 @@ package seasonal.parade.halloween;
 
 import java.util.Random;
 
-import net.minecraft.src.*;
+import net.minecraft.src.BlockContainer;
+import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EntityItem;
+import net.minecraft.src.EntityLiving;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.IBlockAccess;
+import net.minecraft.src.IInventory;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.Material;
+import net.minecraft.src.MathHelper;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.TileEntity;
+import net.minecraft.src.World;
 
-public class BlockMixer extends BlockContainer{
-	public BlockMixer(int blockId, int j){
+public class BlockCandyMaker extends BlockContainer{
+
+	public BlockCandyMaker(int blockId, int j){
 		super(blockId, j, Material.iron);
-		setCreativeTab(CreativeTabs.tabBlock);
 	}
 	
 	@Override
@@ -17,9 +29,10 @@ public class BlockMixer extends BlockContainer{
 		if(tile_entity == null || player.isSneaking()){
 			return false;
 		}
-		player.openGui(Halloween.instance, GuiIds.MIXER, world, x, y, z);
+		player.openGui(Halloween.instance, GuiIds.CANDY_MAKER, world, x, y, z);
 		return true;
 	}
+	
 	/**
      * Retrieves the block texture to use based on the display side. Args: iBlockAccess, x, y, z, side
      */
@@ -27,16 +40,16 @@ public class BlockMixer extends BlockContainer{
     {
         if (par5 == 1)
         {
-            return 10;
+            return 14;
         }
         else if (par5 == 0)
         {
-            return 9;
+            return 14;
         }
         else
         {
             int var6 = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
-            return par5 != var6 ? 8 : 7;
+            return par5 != var6 ? 12 : 11;
         }
     }
 
@@ -45,7 +58,7 @@ public class BlockMixer extends BlockContainer{
      */
     public int getBlockTextureFromSide(int par1)
     {
-        return par1 == 1 ? 10 : (par1 == 0 ? 8 : (par1 == 3 ? 8 : 7));
+        return par1 == 1 ? 14 : (par1 == 0 ? 12 : (par1 == 3 ? 12 : 11));
     }
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int i, int j){
@@ -88,38 +101,73 @@ public class BlockMixer extends BlockContainer{
 			}
 		}
 	}
+	
+	@Override
+	public TileEntity createNewTileEntity(World world){
+		return new TileCandyMaker();
+	}
+	@SuppressWarnings({ "all" })
+	@Override
+	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
+		TileCandyMaker tile = (TileCandyMaker) world.getBlockTileEntity(i, j, k);
+
+		if (!tile.canWork()) {
+			return;
+		}
+
+		float f = (float) i + 0.5F;
+		float f1 = (float) j + 0.0F + (random.nextFloat() * 6F) / 16F;
+		float f2 = (float) k + 0.5F;
+		float f3 = 0.52F;
+		float f4 = random.nextFloat() * 0.6F - 0.3F;
+
+		world.spawnParticle("reddust", f - f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
+		world.spawnParticle("reddust", f + f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
+		world.spawnParticle("reddust", f + f4, f1, f2 - f3, 0.0D, 0.0D, 0.0D);
+		world.spawnParticle("reddust", f + f4, f1, f2 + f3, 0.0D, 0.0D, 0.0D);
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int i, int j, int k, int l) {
+		TileCandyMaker tile = (TileCandyMaker) world.getBlockTileEntity(i, j, k);
+
+		if (tile != null) {
+			tile.checkRedstonePower();
+		}
+	}
+	
 	/**
      * Called when the block is placed in the world.
      */
-    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
+    public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving par5EntityLiving)
     {
+    	TileCandyMaker tile = (TileCandyMaker) world.getBlockTileEntity(i, j, k);
+
+		if (tile != null) {
+			tile.checkRedstonePower();
+		}
         int var6 = MathHelper.floor_double((double)(par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
         if (var6 == 0)
         {
-            par1World.setBlockMetadataWithNotify(par2, par3, par4, 2);
+        	world.setBlockMetadataWithNotify(i, j, k, 2);
         }
 
         if (var6 == 1)
         {
-            par1World.setBlockMetadataWithNotify(par2, par3, par4, 5);
+        	world.setBlockMetadataWithNotify(i, j, k, 5);
         }
 
         if (var6 == 2)
         {
-            par1World.setBlockMetadataWithNotify(par2, par3, par4, 3);
+        	world.setBlockMetadataWithNotify(i, j, k, 3);
         }
 
         if (var6 == 3)
         {
-            par1World.setBlockMetadataWithNotify(par2, par3, par4, 4);
+        	world.setBlockMetadataWithNotify(i, j, k, 4);
         }
     }
-	@Override
-	public TileEntity createNewTileEntity(World world){
-		return new TileMixer();
-	}
-	
 	@Override
 	public String getTextureFile(){
 		return DefaultProps.TEXTURE_BLOCKS;

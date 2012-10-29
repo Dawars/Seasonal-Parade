@@ -1,6 +1,8 @@
 package seasonal.parade.halloween;
 
 import forestry.api.core.ItemInterface;
+import forestry.api.fuels.EngineBronzeFuel;
+import forestry.api.fuels.EngineCopperFuel;
 import forestry.api.recipes.RecipeManagers;
 import ic2.api.Items;
 
@@ -13,8 +15,10 @@ import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.GameWindowListener;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemFood;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
+import net.minecraft.src.Potion;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
@@ -76,6 +80,7 @@ public class Halloween {
     public static Block blockAsh;
 //    public static Block candyBasket;
     public static Block Mixer;
+    public static Block candyMaker;
     
  // Item Registry
  	public static Item ashItem;
@@ -91,6 +96,14 @@ public class Halloween {
  	public static Item milkCan;
  	public static Item milkWaxCapsule;
  	public static Item milkRefractoryCapsule;
+ 	
+ 	public static Item candyRed;
+ 	public static Item candyGreen;
+ 	public static Item candyBlue;
+ 	public static Item candyYellow;
+ 	public static Item candyOrange;
+ 	public static Item candyPumpkin;
+ 	public static Item candyPink;
  	
  	
  	//IC2
@@ -109,6 +122,7 @@ public class Halloween {
 	public void loadConfiguration(FMLPreInitializationEvent evt) {
 		NetworkRegistry.instance().registerGuiHandler(this, guiHandler);
 		GameRegistry.registerTileEntity(TileMixer.class, "Mixer");
+		GameRegistry.registerTileEntity(TileCandyMaker.class, "Candy Maker");
 		
 		
 		GameRegistry.registerWorldGenerator(new HalloweenWorldGenerator());
@@ -138,11 +152,12 @@ public class Halloween {
 		    ash = (new BlockAsh(DefaultProps.ASH_LAYER_ID, 6)).setHardness(0.1F).setStepSound(Block.soundClothFootstep).setBlockName("ash").setLightOpacity(0);
 		    blockAsh = (new BlockAshBlock(DefaultProps.ASH_BLOCK_ID, 6)).setHardness(0.2F).setStepSound(Block.soundClothFootstep).setBlockName("ashBlock");
 //		    candyBasket = (new CandyBasket(DefaultProps.CANDY_BASKET_ID, Material.pumpkin)).setHardness(0.2F).setStepSound(Block.soundWoodFootstep).setBlockName("candyBasket");
-	 		Mixer = new BlockMixer(DefaultProps.MIXER_BLOCK_ID, 2).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("mixer");
+	 		Mixer = new BlockMixer(DefaultProps.MIXER_BLOCK_ID, 7).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("mixer");
+	 		candyMaker = new BlockCandyMaker(DefaultProps.CANDY_MAKER_ID, 3).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("candyMaker");
 
 			
 			
-		 // Item Registry
+	 		// Item Registry
 			ashItem = (new HalloweenItem(DefaultProps.ASH_ITEM_ID)).setIconIndex(1).setMaxStackSize(16).setCreativeTab(CreativeTabs.tabDecorations).setItemName("ashItem");
 			rawCandy = new HalloweenItem(DefaultProps.RAW_CANDY_ID).setIconIndex(0).setCreativeTab(CreativeTabs.tabMisc).setItemName("rawCandy");
 			rawCandyBucket = new HalloweenItem(DefaultProps.RAW_CANDY_BUCKET_ID).setIconIndex(8).setMaxStackSize(1).setCreativeTab(CreativeTabs.tabMisc).setItemName("rawCandyBucket");
@@ -156,11 +171,19 @@ public class Halloween {
 			milkCan = new HalloweenItem(DefaultProps.MILK_CAN_ID).setIconIndex(9).setCreativeTab(CreativeTabs.tabMisc).setItemName("milkCan");
 			milkWaxCapsule = new HalloweenItem(DefaultProps.MILK_WAX_CAPSULE_ID).setIconIndex(10).setCreativeTab(CreativeTabs.tabMisc).setItemName("milkWaxCapsule");
 			milkRefractoryCapsule = new HalloweenItem(DefaultProps.MILK_REFRACTORY_CAPSULE_ID).setIconIndex(13).setCreativeTab(CreativeTabs.tabMisc).setItemName("milkRefractoryCapsule");
-	 		
+
+			candyRed = (new CandyFood(DefaultProps.CANDY1, 0, 2F)).setPotionEffect(Potion.fireResistance.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 0).setItemName("candyRed");
+			candyGreen = (new CandyFood(DefaultProps.CANDY2, 0, 2F)).setPotionEffect(Potion.regeneration.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 1).setItemName("candyGreen");
+			candyBlue = (new CandyFood(DefaultProps.CANDY3, 0, 2F)).setPotionEffect(Potion.waterBreathing.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 2).setItemName("candyBlue");
+			candyYellow = (new CandyFood(DefaultProps.CANDY4, 0, 2F)).setPotionEffect(Potion.nightVision.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 3).setItemName("candyYellow");
+			candyOrange = (new CandyFood(DefaultProps.CANDY5, 0, 2F)).setPotionEffect(Potion.digSpeed.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 4).setItemName("candyOrange");
+			candyPumpkin = (new CandyFood(DefaultProps.CANDY6, 0, 2F)).setPotionEffect(Potion.invisibility.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 5).setItemName("candyPumpkin");
+			candyPink = (new CandyFood(DefaultProps.CANDY7, 0, 2F)).setPotionEffect(Potion.heal.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 6).setItemName("candyPink");
+
 
 			
 		    RegisterBlocks(new Block[] {
-					evilPumpkin, evilLantern, ash, blockAsh, Mixer
+					evilPumpkin, evilLantern, ash, blockAsh, Mixer, candyMaker
 			});
 			
 			
@@ -174,6 +197,7 @@ public class Halloween {
 			LanguageRegistry.addName(blockAsh, "Ash Block");
 //			LanguageRegistry.addName(candyBasket, "Candy Basket");
 			LanguageRegistry.addName(Mixer, "Mixer");
+			LanguageRegistry.addName(candyMaker, "Candy Maker");
 			
 			// Item Names
 			LanguageRegistry.addName(ashItem, "Ash");
@@ -190,7 +214,14 @@ public class Halloween {
 			LanguageRegistry.addName(milkRefractoryCapsule, "Milk Capsule");
 			
 			
-//			LanguageRegistry.addName(milkRefractoryCapsule, "Milk Capsule");
+			LanguageRegistry.addName(candyBlue, "Blue Candy");
+			LanguageRegistry.addName(candyGreen, "Green Candy");
+			LanguageRegistry.addName(candyOrange, "Orange Candy");
+			LanguageRegistry.addName(candyPumpkin, "Pumpkin Candy");
+			LanguageRegistry.addName(candyPink, "Pink Candy");
+			LanguageRegistry.addName(candyRed, "Red Candy");
+			LanguageRegistry.addName(candyYellow, "Yellow Candy");
+			
 //			LanguageRegistry.addName(milkRefractoryCapsule, "Milk Capsule");
 			
 			// Containers - Mobs
@@ -230,16 +261,16 @@ public class Halloween {
 
 	
 	// Mods-Loaded Method
-		@PostInit
-		public void modsLoaded(FMLPostInitializationEvent evt){
-			CoreProxy.proxy.addAnimation(new TextureMilkFX());
-			CoreProxy.proxy.addAnimation(new TextureRawCandyFX());
-						
-			modIC2 = Loader.isModLoaded("IC2");
-			modForestry = Loader.isModLoaded("Forestry");
+	@PostInit
+	public void modsLoaded(FMLPostInitializationEvent evt){
+		CoreProxy.proxy.addAnimation(new TextureMilkFX());
+		CoreProxy.proxy.addAnimation(new TextureRawCandyFX());
+				
+		modIC2 = Loader.isModLoaded("IC2");
+		modForestry = Loader.isModLoaded("Forestry");
 
-	 	    plugins();
-		}
+ 	    plugins();
+	}
 		
 	public void plugins(){
 		if(modIC2){
@@ -266,7 +297,7 @@ public class Halloween {
 			LiquidManager.liquids.add(new LiquidData(LiquidStacks.milk, new ItemStack(milkRefractoryCapsule), new ItemStack(refractory_capsule)));
 
 
-
+			//Forestry Bottler
 			RecipeManagers.bottlerManager.addRecipe(5, LiquidStacks.rawCandy, new ItemStack(Item.bucketEmpty), new ItemStack(rawCandyBucket));
 			RecipeManagers.bottlerManager.addRecipe(5, LiquidStacks.rawCandy, new ItemStack(cell), new ItemStack(rawCandyCell));
 			RecipeManagers.bottlerManager.addRecipe(5, LiquidStacks.rawCandy, new ItemStack(canEmpty), new ItemStack(rawCandyCan));
@@ -277,7 +308,11 @@ public class Halloween {
 			RecipeManagers.bottlerManager.addRecipe(5, LiquidStacks.milk, new ItemStack(cell), new ItemStack(milkCell));
 			RecipeManagers.bottlerManager.addRecipe(5, LiquidStacks.milk, new ItemStack(canEmpty), new ItemStack(milkCan));
 			RecipeManagers.bottlerManager.addRecipe(5, LiquidStacks.milk, new ItemStack(wax_capsule), new ItemStack(milkWaxCapsule));
-			RecipeManagers.bottlerManager.addRecipe(5, LiquidStacks.milk, new ItemStack(refractory_capsule), new ItemStack(milkRefractoryCapsule));		
+			RecipeManagers.bottlerManager.addRecipe(5, LiquidStacks.milk, new ItemStack(refractory_capsule), new ItemStack(milkRefractoryCapsule));
+			
+			//Forestry Bioengine
+			new EngineBronzeFuel(new ItemStack(milk), 1, 40000, 1);
+			new EngineBronzeFuel(new ItemStack(rawCandy), 1, 40000, 1);
 		}
 	}
 

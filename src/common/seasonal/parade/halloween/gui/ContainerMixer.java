@@ -2,10 +2,13 @@ package seasonal.parade.halloween.gui;
 
 import java.util.Iterator;
 
+import buildcraft.api.liquids.LiquidManager;
 import buildcraft.api.liquids.LiquidStack;
 
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
+import seasonal.parade.halloween.LiquidHelper;
+import seasonal.parade.halloween.LiquidStacks;
 import seasonal.parade.halloween.SlotClosed;
 import seasonal.parade.halloween.TileMixer;
 import net.minecraft.src.*;
@@ -14,6 +17,13 @@ import net.minecraftforge.common.ISidedInventory;
 
 public class ContainerMixer extends HalloweenContainer{
 	protected TileMixer tile;
+	
+	private int tankMilkAmount = 0;
+	private int tankMilkId = 0;
+	
+	private int tankCandyAmount = 0;
+	private int tankCandyId = 0;
+	
 	protected static boolean isRunning = false;
 	
 	
@@ -55,33 +65,99 @@ public class ContainerMixer extends HalloweenContainer{
         }
 	}
 	
-	 public void addCraftingToCrafters(ICrafting iCrafting)
-	    {
-	        super.addCraftingToCrafters(iCrafting);
-	        if(this.tile.tankMilk.getLiquid() != null){
-	        	iCrafting.updateCraftingInventoryInfo(this, 0, this.tile.tankMilk.getLiquid().amount);
-	        } else {
-	        	iCrafting.updateCraftingInventoryInfo(this, 0, 0);
-	        }
+	public void addCraftingToCrafters(ICrafting iCrafting){
+		super.addCraftingToCrafters(iCrafting);
+		
+		if(this.tile.tankMilk.getLiquid() != null){
+			iCrafting.updateCraftingInventoryInfo(this, 0, this.tile.tankMilk.getLiquid().amount);
+		}
+		else {
+			iCrafting.updateCraftingInventoryInfo(this, 0, 0);
+    	}
+
+		if(this.tile.tankMilk.getLiquid() != null){
+        	iCrafting.updateCraftingInventoryInfo(this, 1, this.tile.tankMilk.getLiquid().itemID);
+		} else {
+			iCrafting.updateCraftingInventoryInfo(this, 1, 0);
+		}
 	        
-	        if(this.tile.tankMilk.getLiquid() != null){
-	        	iCrafting.updateCraftingInventoryInfo(this, 1, this.tile.tankMilk.getLiquid().itemID);
-	        } else {
-	        	iCrafting.updateCraftingInventoryInfo(this, 1, 0);
-	        }
-	        
-	        if(this.tile.tankCandy.getLiquid() != null){
-	        	iCrafting.updateCraftingInventoryInfo(this, 2, this.tile.tankCandy.getLiquid().amount);
-	        } else {
-	        	iCrafting.updateCraftingInventoryInfo(this, 2, 0);
-	        }
-	        
-	        if(this.tile.tankCandy.getLiquid() != null){
-	        	iCrafting.updateCraftingInventoryInfo(this, 3, this.tile.tankCandy.getLiquid().itemID);
-	        } else {
-	        	iCrafting.updateCraftingInventoryInfo(this, 3, 0);
-	        }
-	    }
+		if(this.tile.tankCandy.getLiquid() != null){
+			iCrafting.updateCraftingInventoryInfo(this, 2, this.tile.tankCandy.getLiquid().amount);
+		}
+		else {
+			iCrafting.updateCraftingInventoryInfo(this, 2, 0);
+    	}
+		
+		if(this.tile.tankCandy.getLiquid() != null){
+			iCrafting.updateCraftingInventoryInfo(this, 3, this.tile.tankCandy.getLiquid().itemID);
+		} else {
+			iCrafting.updateCraftingInventoryInfo(this, 3, 0);
+		}
+		
+		if(this.tile.isRunning)
+			iCrafting.updateCraftingInventoryInfo(this, 4, 1);
+		else
+			iCrafting.updateCraftingInventoryInfo(this, 4, 0);
+
+    }
+	 
+	/**
+	 * Updates crafting matrix; called from onCraftMatrixChanged. Args: none
+	 */
+	public void updateCraftingResults(){
+		super.updateCraftingResults();
+		Iterator var1 = this.crafters.iterator();
+
+		while (var1.hasNext())
+		{
+			ICrafting iCrafting = (ICrafting)var1.next();
+
+			if (this.tile.tankMilk.getLiquid() != null && this.tankMilkAmount != this.tile.tankMilk.getLiquid().amount)
+			{
+				iCrafting.updateCraftingInventoryInfo(this, 0, this.tile.tankMilk.getLiquid().amount);
+			}
+			else if(this.tile.tankMilk.getLiquid() == null){
+				iCrafting.updateCraftingInventoryInfo(this, 0, 0);
+			}
+
+			if (this.tile.tankMilk.getLiquid() != null && this.tankMilkId != this.tile.tankMilk.getLiquid().itemID)
+			{
+				iCrafting.updateCraftingInventoryInfo(this, 1, this.tile.tankMilk.getLiquid().itemID);
+			}
+	            
+			if (this.tile.tankCandy.getLiquid() != null && this.tankCandyAmount != this.tile.tankCandy.getLiquid().amount)
+			{
+				iCrafting.updateCraftingInventoryInfo(this, 2, this.tile.tankCandy.getLiquid().amount);
+			}
+			else if(this.tile.tankCandy.getLiquid() == null){
+				iCrafting.updateCraftingInventoryInfo(this, 2, 0);
+			}
+
+			if (this.tile.tankCandy.getLiquid() != null && this.tankCandyId != this.tile.tankCandy.getLiquid().itemID)
+			{
+				iCrafting.updateCraftingInventoryInfo(this, 3, this.tile.tankCandy.getLiquid().itemID);
+			}
+			
+			if(this.isRunning != this.tile.isRunning()){
+				if(this.tile.isRunning)
+					iCrafting.updateCraftingInventoryInfo(this, 4, 1);
+				else
+					iCrafting.updateCraftingInventoryInfo(this, 4, 0);
+			}
+        }
+		
+		if(this.tile.tankMilk.getLiquid() != null){
+	        this.tankMilkAmount = this.tile.tankMilk.getLiquid().amount;
+	        this.tankMilkId = this.tile.tankMilk.getLiquid().itemID;
+		}
+		
+		if(this.tile.tankCandy.getLiquid() != null){
+	        this.tankCandyAmount = this.tile.tankCandy.getLiquid().amount;
+	        this.tankCandyId = this.tile.tankCandy.getLiquid().itemID;
+		}
+        this.isRunning = this.tile.isRunning;
+
+	}
 
 	    @SideOnly(Side.CLIENT)
 	    public void updateProgressBar(int id, int data)
@@ -93,14 +169,14 @@ public class ContainerMixer extends HalloweenContainer{
 		        case 0:
 		        	if(this.tile.tankMilk.getLiquid() != null){
 		        		this.tile.tankMilk.getLiquid().amount = data;
-		        	} else {//Add Milk id by default
+		        	} else {
 		        		this.tile.tankMilk.setLiquid(new LiquidStack(0, data));
 		        	}
 		        break;
 		        case 1:
 		        	if(this.tile.tankMilk.getLiquid() != null){
 		        		this.tile.tankMilk.getLiquid().itemID = data;
-		        	} else {//Add Milk id by default
+		        	} else {
 		        		this.tile.tankMilk.setLiquid(new LiquidStack(data, 0));
 		        	}
 	        	break;
@@ -110,27 +186,24 @@ public class ContainerMixer extends HalloweenContainer{
 		        case 2:
 		        	if(this.tile.tankCandy.getLiquid() != null){
 		        		this.tile.tankCandy.getLiquid().amount = data;
-		        	} else {//Add Milk id by default
+		        	} else {
 		        		this.tile.tankCandy.setLiquid(new LiquidStack(0, data));
 		        	}
 	        	break;
 		        case 3:
 		        	if(this.tile.tankCandy.getLiquid() != null){
 		        		this.tile.tankCandy.getLiquid().itemID = data;
-		        	} else {//Add Milk id by default
+		        	} else {
 		        		this.tile.tankCandy.setLiquid(new LiquidStack(data, 0));
 		        	}
 	        	break;
-
+		        case 4:
+		        	if(data == 1)
+		        		this.tile.isRunning = true;
+		        	else
+		        		this.tile.isRunning = false;
+	        	break;
 	        }
-
-//	        if (par1 == 2)
-//	        {
-//	        	if(par2 == 1)
-//	        		this.tile.isRunning = true;
-//	        	else
-//	        		this.tile.isRunning = false;
-//	        }
 	    }
 	
 	@Override
@@ -160,19 +233,19 @@ public class ContainerMixer extends HalloweenContainer{
 
                 var3.onSlotChange(stack, var2);
             } else {
-            	if(TileMixer.contains(TileMixer.ingredients, stack.getItem())){//if ingredients
+            	if(LiquidHelper.contains(TileMixer.ingredients, stack.getItem())){//if ingredients
 	            	if (!this.mergeItemStack(stack, 0, 4, false))
 	                {
 	                    return null;
 	                }
 	            	var3.onSlotChange(stack, var2);
-            	} else if(TileMixer.contains(TileMixer.emptyContainers, stack.getItem())){//if empty liquid containers
+            	} else if(LiquidHelper.contains(LiquidHelper.emptyContainers, stack.getItem())){//if empty liquid containers
             		if (!this.mergeItemStack(stack, 5, 6, false))
 	                {
 	                    return null;
 	                }
 	            	var3.onSlotChange(stack, var2);
-            	} else if(TileMixer.contains(TileMixer.milkContainers, stack.getItem())){ //filled liquid container
+            	} else if(LiquidHelper.contains(LiquidHelper.milkContainers, stack.getItem())){ //filled liquid container
             		if (!this.mergeItemStack(stack, 4, 5, false))
 	                {
 	                    return null;

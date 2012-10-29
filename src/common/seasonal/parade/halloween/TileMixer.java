@@ -27,20 +27,7 @@ import net.minecraftforge.common.ISidedInventory;
 
 public class TileMixer extends HalloweenTile implements ITankContainer, IInventory, ISidedInventory
 {
-	public static Item[] milkContainers = new Item[]{
-			Item.bucketMilk,
-			Halloween.milkCell,
-			Halloween.milkCan,
-			Halloween.milkWaxCapsule,
-			Halloween.milkRefractoryCapsule
-	};
-	public static Item[] emptyContainers = new Item[]{
-			Item.bucketEmpty,
-			Halloween.cell,
-			Halloween.canEmpty,
-			Halloween.wax_capsule,
-			Halloween.refractory_capsule
-	};
+	
 	public static Item[] ingredients = new Item[]{
 		Item.sugar,
 		Item.slimeBall
@@ -104,7 +91,7 @@ public class TileMixer extends HalloweenTile implements ITankContainer, IInvento
 	    		
 	    		}
 	    		
-	    		if(contains(milkContainers, milkslot.getItem())  &&
+	    		if(contains(LiquidHelper.milkContainers, milkslot.getItem())  &&
 		    			this.tankMilk.fill(LiquidStacks.milk, false) == LiquidStacks.milk.amount
 	    			){
 	    			this.tankMilk.fill(LiquidStacks.milk, true);

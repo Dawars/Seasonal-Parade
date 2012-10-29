@@ -3,6 +3,7 @@ package seasonal.parade.halloween.gui;
 import org.lwjgl.opengl.GL11;
 
 import seasonal.parade.halloween.DefaultProps;
+import seasonal.parade.halloween.TileCandyMaker;
 import seasonal.parade.halloween.TileMixer;
 
 import net.minecraft.src.Block;
@@ -10,12 +11,16 @@ import net.minecraft.src.Container;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.Item;
+import net.minecraft.src.StatCollector;
+import net.minecraft.src.TileEntityFurnace;
 import net.minecraftforge.client.ForgeHooksClient;
 
-public class GuiMixer extends HalloweenGui{
+public class GuiCandyMaker extends HalloweenGui{
+    private TileCandyMaker inventory;
 
-	public GuiMixer(InventoryPlayer inventoryplayer, TileMixer mixer) {
-		super(new ContainerMixer(inventoryplayer, mixer), mixer);
+	public GuiCandyMaker(InventoryPlayer inventoryplayer, TileCandyMaker candyMaker) {
+		super(new ContainerCandyMaker(inventoryplayer, candyMaker), candyMaker);
+		this.inventory = candyMaker;
 	}
 
 	@Override
@@ -27,28 +32,26 @@ public class GuiMixer extends HalloweenGui{
      */
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-    	this.fontRenderer.drawString("Mixer", 14, 5, 0x404040);
+    	this.fontRenderer.drawString("Candy Maker", 8, 5, 0x404040);
 		this.fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
     }
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-		int i = mc.renderEngine.getTexture(DefaultProps.TEXTURE_PATH_GUI + "/mixer_gui.png");
+		int i = mc.renderEngine.getTexture(DefaultProps.TEXTURE_PATH_GUI + "/candy_maker_gui.png");
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(i);
 		int j = (width - xSize) / 2;
 		int k = (height - ySize) / 2;
 		drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
-		TileMixer mixer = (TileMixer) tile;
+		TileCandyMaker candyMaker = (TileCandyMaker) tile;
 		//Arrow
-		if(mixer.isRunning())
-			this.drawTexturedModalRect(j + 85, k + 36, 176, 61, 22, 16);
+		int var7 = this.inventory.getCookProgressScaled(24);
+        this.drawTexturedModalRect(j + 92, k + 48, 176, 68, var7 + 1, 16);
 		
 		//Tanks
 		
-		if(mixer.tankMilk.getLiquid() != null)
-			displayGauge(j, k, 21, 59, mixer.getScaledMilk(47), mixer.tankMilk.getLiquid().itemID);
-		if(mixer.tankCandy.getLiquid() != null)
-			displayGauge(j, k, 21, 116, mixer.getScaledCandy(47), mixer.tankCandy.getLiquid().itemID);
+		if(candyMaker.tankCandy.getLiquid() != null)
+			displayGauge(j, k, 22, 67, candyMaker.getScaledCandy(47), candyMaker.tankCandy.getLiquid().itemID);
 	}
 	
 	private void displayGauge(int j, int k, int line, int col, int squaled, int liquidId) {
@@ -87,7 +90,7 @@ public class GuiMixer extends HalloweenGui{
 				break;
 		}
 
-		int i = mc.renderEngine.getTexture(DefaultProps.TEXTURE_PATH_GUI + "/mixer_gui.png");
+		int i = mc.renderEngine.getTexture(DefaultProps.TEXTURE_PATH_GUI + "/candy_maker_gui.png");
 
 		mc.renderEngine.bindTexture(i);
 		drawTexturedModalRect(j + col, k + line, 176, 0, 16, 60);

@@ -20,6 +20,7 @@ public class DefaultProps {
 
 
 
+
 	public static int NETWORK_UPDATE_RANGE = 128;
 
 	public static String TEXTURE_PATH = "/seasonal/parade/halloween/gfx";
@@ -43,6 +44,7 @@ public class DefaultProps {
 	public static int ASH_BLOCK_ID = 3203;
 	public static int CANDY_BASKET_ID = 3204;
 	public static int MIXER_BLOCK_ID = 3205;
+	public static int CANDY_MAKER_ID = 3206;
 
 	
 	
@@ -61,4 +63,12 @@ public class DefaultProps {
 	public static int MILK_WAX_CAPSULE_ID = 15309;
 	public static int MILK_REFRACTORY_CAPSULE_ID = 15310;
 	public static int MILK_ID = 15311;
+	
+	public static int CANDY1 = 15312;
+	public static int CANDY2 = 15313;
+	public static int CANDY3 = 15314;
+	public static int CANDY4 = 15315;
+	public static int CANDY5 = 15316;
+	public static int CANDY6 = 15317;
+	public static int CANDY7 = 15318;
 }
