@@ -47,12 +47,10 @@ public class GuiCandyMaker extends HalloweenGui{
         if (this.isMouseOver(67, 22, 16, 47, x, y))//if mouse over
         {
     		TileCandyMaker candyMaker = (TileCandyMaker) tile;
-    		ItemStack liquidItem = new ItemStack(candyMaker.tankCandy.getLiquid().asItemStack().getItem());
-        	
     		
-        	if(candyMaker.tankCandy.getLiquid() != null)
+        	if(candyMaker.tankCandy.getLiquid() != null && candyMaker.tankCandy.getLiquid().itemID != 0)
             {
-        		System.out.println("ItemID: " + candyMaker.tankCandy.getLiquid().itemID);
+        		ItemStack liquidItem = new ItemStack(candyMaker.tankCandy.getLiquid().asItemStack().getItem());
         		this.drawTooltip(liquidItem, x, y);
             }
         }

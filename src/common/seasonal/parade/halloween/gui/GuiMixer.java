@@ -1,6 +1,11 @@
 package seasonal.parade.halloween.gui;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import seasonal.parade.halloween.DefaultProps;
 import seasonal.parade.halloween.TileCandyMaker;
@@ -11,6 +16,8 @@ import net.minecraft.src.Container;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.RenderHelper;
 import net.minecraftforge.client.ForgeHooksClient;
 
 public class GuiMixer extends HalloweenGui{
@@ -49,21 +56,96 @@ public class GuiMixer extends HalloweenGui{
         if (this.isMouseOver(59, 21, 16, 47, x, y))//milk
         {
     		
-        	if (mixer.tankMilk.getLiquid() != null)
+        	if (mixer.tankMilk.getLiquid() != null && mixer.tankMilk.getLiquid().itemID != 0)
             {
         		this.func_74184_a(mixer.tankMilk.getLiquid().asItemStack(), x, y);
             }
         } 
         else if (this.isMouseOver(116, 21, 16, 47, x, y))//candy
         {
-        	if (mixer.tankCandy.getLiquid() != null)
+        	if (mixer.tankCandy.getLiquid() != null && mixer.tankCandy.getLiquid().itemID != 0)
             {
-        		this.func_74184_a(mixer.tankCandy.getLiquid().asItemStack(), x, y);
+        		this.drawTooltip(mixer.tankCandy.getLiquid().asItemStack(), x, y);
             }
         }
         
 	}
-	
+	protected void drawTooltip(ItemStack item, int x, int y)
+    {
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        List text = new ArrayList();
+        text.add(item.getItem().getItemDisplayName(item));
+
+        if (!text.isEmpty())
+        {
+            int var5 = 0;
+            Iterator var6 = text.iterator();
+
+            while (var6.hasNext())
+            {
+                String var7 = (String)var6.next();
+                int var8 = this.fontRenderer.getStringWidth(var7);
+
+                if (var8 > var5)
+                {
+                    var5 = var8;
+                }
+            }
+
+            int drawX = x + 12;
+            int drawY = y - 12;
+            int var9 = 8;
+
+            if (text.size() > 1)
+            {
+                var9 += 2 + (text.size() - 1) * 10;
+            }
+
+            this.zLevel = 300.0F;
+            itemRenderer.zLevel = 300.0F;
+            int var10 = -267386864;
+            this.drawGradientRect(drawX - 3, drawY - 4, drawX + var5 + 3, drawY - 3, var10, var10);
+            this.drawGradientRect(drawX - 3, drawY + var9 + 3, drawX + var5 + 3, drawY + var9 + 4, var10, var10);
+            this.drawGradientRect(drawX - 3, drawY - 3, drawX + var5 + 3, drawY + var9 + 3, var10, var10);
+            this.drawGradientRect(drawX - 4, drawY - 3, drawX - 3, drawY + var9 + 3, var10, var10);
+            this.drawGradientRect(drawX + var5 + 3, drawY - 3, drawX + var5 + 4, drawY + var9 + 3, var10, var10);
+            int var11 = 1347420415;
+            int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
+            this.drawGradientRect(drawX - 3, drawY - 3 + 1, drawX - 3 + 1, drawY + var9 + 3 - 1, var11, var12);
+            this.drawGradientRect(drawX + var5 + 2, drawY - 3 + 1, drawX + var5 + 3, drawY + var9 + 3 - 1, var11, var12);
+            this.drawGradientRect(drawX - 3, drawY - 3, drawX + var5 + 3, drawY - 3 + 1, var11, var11);
+            this.drawGradientRect(drawX - 3, drawY + var9 + 2, drawX + var5 + 3, drawY + var9 + 3, var12, var12);
+
+            for (int var13 = 0; var13 < text.size(); ++var13)
+            {
+                String var14 = (String)text.get(var13);
+
+                if (var13 == 0)
+                {
+                    var14 = "\u00a7" + Integer.toHexString(item.getRarity().rarityColor) + var14;
+                }
+                else
+                {
+                    var14 = "\u00a77" + var14;
+                }
+
+                this.fontRenderer.drawStringWithShadow(var14, drawX, drawY, -1);
+
+                if (var13 == 0)
+                {
+                    drawY += 2;
+                }
+
+                drawY += 10;
+            }
+
+            this.zLevel = 0.0F;
+            itemRenderer.zLevel = 0.0F;
+        }
+    }
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
 		int i = mc.renderEngine.getTexture(DefaultProps.TEXTURE_PATH_GUI + "/mixer_gui.png");
