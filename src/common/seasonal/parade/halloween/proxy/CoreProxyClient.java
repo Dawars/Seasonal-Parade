@@ -166,9 +166,9 @@ public class CoreProxyClient extends CoreProxy {
 
 	
 	@Override
-	public void addAnimation() {		
-		TextureFXManager.instance().addAnimation((FMLTextureFX)new TextureMilkFX());
+	public void addAnimation() {
 		TextureFXManager.instance().addAnimation((FMLTextureFX)new TextureRawCandyFX());
+		TextureFXManager.instance().addAnimation((FMLTextureFX)new TextureMilkFX());
 	}
 	@Override
 	public void spawnParticle(String particle, double x, double y, double z, double motionX, double motionY, double motionZ){

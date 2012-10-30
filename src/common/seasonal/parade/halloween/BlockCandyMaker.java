@@ -106,14 +106,13 @@ public class BlockCandyMaker extends BlockContainer{
 	public TileEntity createNewTileEntity(World world){
 		return new TileCandyMaker();
 	}
-	@SuppressWarnings({ "all" })
+
 	@Override
 	public void randomDisplayTick(World world, int i, int j, int k, Random random) {
 		TileCandyMaker tile = (TileCandyMaker) world.getBlockTileEntity(i, j, k);
 
-		if (!tile.canWork()) {
+		if (!tile.canWork())
 			return;
-		}
 
 		float f = (float) i + 0.5F;
 		float f1 = (float) j + 0.0F + (random.nextFloat() * 6F) / 16F;
@@ -135,7 +134,18 @@ public class BlockCandyMaker extends BlockContainer{
 			tile.checkRedstonePower();
 		}
 	}
-	
+	/**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World world, int i, int j, int k)
+    {
+        super.onBlockAdded(world, i, j, k);
+        TileCandyMaker tile = (TileCandyMaker) world.getBlockTileEntity(i, j, k);
+
+		if (tile != null) {
+			tile.checkRedstonePower();
+		}
+    }
 	/**
      * Called when the block is placed in the world.
      */

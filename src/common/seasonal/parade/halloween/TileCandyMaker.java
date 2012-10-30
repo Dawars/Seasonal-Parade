@@ -52,6 +52,11 @@ public class TileCandyMaker extends HalloweenTile implements ITankContainer, IIn
     public boolean hasUpdate = false;
     public SafeTimeTracker tracker = new SafeTimeTracker();
 
+    
+    public void initialize(){
+    	this.checkRedstonePower();
+    }
+    
     /* UPDATING */
     @Override
     public void updateEntity()

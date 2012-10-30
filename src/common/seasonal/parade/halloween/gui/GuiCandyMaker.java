@@ -3,6 +3,7 @@ package seasonal.parade.halloween.gui;
 import org.lwjgl.opengl.GL11;
 
 import seasonal.parade.halloween.DefaultProps;
+import seasonal.parade.halloween.LiquidHelper;
 import seasonal.parade.halloween.TileCandyMaker;
 import seasonal.parade.halloween.TileMixer;
 
@@ -11,6 +12,9 @@ import net.minecraft.src.Container;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.RenderHelper;
+import net.minecraft.src.Slot;
 import net.minecraft.src.StatCollector;
 import net.minecraft.src.TileEntityFurnace;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -22,7 +26,31 @@ public class GuiCandyMaker extends HalloweenGui{
 		super(new ContainerCandyMaker(inventoryplayer, candyMaker), candyMaker);
 		this.inventory = candyMaker;
 	}
-
+	
+	protected boolean isMouseOver(int par1, int par2, int par3, int par4, int par5, int par6)
+    {
+        int var7 = this.guiLeft;
+        int var8 = this.guiTop;
+        par5 -= var7;
+        par6 -= var8;
+        return par5 >= par1 - 1 && par5 < par1 + par3 + 1 && par6 >= par2 - 1 && par6 < par2 + par4 + 1;
+    }
+	
+	@Override
+    public void drawScreen(int x, int y, float par3){
+		super.drawScreen(x, y, par3);
+		int guiLeft = this.guiLeft;
+        int guiTop = this.guiTop;
+        if (this.isMouseOver(67, 22, 16, 47, x, y))//if mouse over
+        {
+    		TileCandyMaker candyMaker = (TileCandyMaker) tile;
+        	if (candyMaker.tankCandy.getLiquid() != null)
+            {
+        		this.func_74184_a(candyMaker.tankCandy.getLiquid().asItemStack(), x, y);
+            }
+        }
+	}
+	
 	@Override
 	protected void drawGuiContainerForegroundLayer() {
 		super.drawGuiContainerForegroundLayer();

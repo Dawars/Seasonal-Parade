@@ -9,6 +9,7 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
 import seasonal.parade.halloween.LiquidHelper;
 import seasonal.parade.halloween.LiquidStacks;
+import seasonal.parade.halloween.SlotCandy;
 import seasonal.parade.halloween.SlotClosed;
 import seasonal.parade.halloween.TileCandyMaker;
 import seasonal.parade.halloween.TileMixer;
@@ -45,10 +46,10 @@ public class ContainerCandyMaker extends HalloweenContainer{
 		//Proccess
 
 		//Candy 
-		addSlotToContainer(new SlotClosed(tile, 6, 123, 26));
-		addSlotToContainer(new SlotClosed(tile, 7, 141, 26));
-		addSlotToContainer(new SlotClosed(tile, 8, 123, 44));
-		addSlotToContainer(new SlotClosed(tile, 9, 141, 44));
+		addSlotToContainer(new SlotCandy(player_inventory.player, tile, 6, 123, 26));
+		addSlotToContainer(new SlotCandy(player_inventory.player, tile, 7, 141, 26));
+		addSlotToContainer(new SlotCandy(player_inventory.player, tile, 8, 123, 44));
+		addSlotToContainer(new SlotCandy(player_inventory.player, tile, 9, 141, 44));
 
 		
 		int i;

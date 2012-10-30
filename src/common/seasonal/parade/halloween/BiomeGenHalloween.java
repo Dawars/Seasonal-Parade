@@ -17,8 +17,8 @@ public class BiomeGenHalloween extends BiomeGenBase
 		super(par1);
 		spawnableCreatureList.clear();
         
-		topBlock = (byte)Block.grass.blockID;
-		fillerBlock = (byte)Block.dirt.blockID;
+		this.topBlock = (byte)Block.grass.blockID;
+		this.fillerBlock = (byte)Block.dirt.blockID;
         
 		this.setBiomeName("Halloween Land");
 		this.setColor(0x631BE0);

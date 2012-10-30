@@ -26,12 +26,14 @@ public class HalloweenWorldGenerator implements IWorldGenerator{
 		int z = blockZ + random.nextInt(16);
 		int y = world.getTopSolidOrLiquidBlock(x, z);
 		
-		
-		if(random.nextInt(20) == 0){
-			WorldGenEvilPumpkin gen = new WorldGenEvilPumpkin();
-			gen.generate(world, random, x, y, z);
-		}
+		if(getBiomeAt(x, y, world) instanceof BiomeGenHalloween){
+			if(random.nextInt(20) == 0){
+				WorldGenEvilPumpkin gen = new WorldGenEvilPumpkin();
+				gen.generate(world, random, x, y, z);
+			}
 			
+			
+		}
 	}
 
 

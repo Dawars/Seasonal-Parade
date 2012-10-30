@@ -71,4 +71,6 @@ public class DefaultProps {
 	public static int CANDY5 = 15316;
 	public static int CANDY6 = 15317;
 	public static int CANDY7 = 15318;
+	
+	public static int PUMPKIN_SOUP = 15319;
 }

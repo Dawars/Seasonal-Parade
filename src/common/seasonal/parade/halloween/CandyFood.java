@@ -19,7 +19,8 @@ public class CandyFood extends ItemFood{
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack itemStack)
 	{
-		return itemStack.getItem().shiftedIndex == Halloween.candyPumpkin.shiftedIndex;
+		return true;
+//		return itemStack.getItem().shiftedIndex == Halloween.candyPumpkin.shiftedIndex;
 	}
 
 }

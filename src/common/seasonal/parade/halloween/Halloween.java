@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.GameWindowListener;
 import net.minecraft.src.Item;
@@ -104,6 +105,7 @@ public class Halloween {
  	public static Item candyOrange;
  	public static Item candyPumpkin;
  	public static Item candyPink;
+ 	public static Item pumpkinSoup;
  	
  	
  	//IC2
@@ -159,8 +161,8 @@ public class Halloween {
 			
 	 		// Item Registry
 			ashItem = (new HalloweenItem(DefaultProps.ASH_ITEM_ID)).setIconIndex(1).setMaxStackSize(16).setCreativeTab(CreativeTabs.tabDecorations).setItemName("ashItem");
-			rawCandy = new HalloweenItem(DefaultProps.RAW_CANDY_ID).setIconIndex(0).setCreativeTab(CreativeTabs.tabMisc).setItemName("rawCandy");
-			rawCandyBucket = new HalloweenItem(DefaultProps.RAW_CANDY_BUCKET_ID).setIconIndex(8).setMaxStackSize(1).setCreativeTab(CreativeTabs.tabMisc).setItemName("rawCandyBucket");
+			rawCandy = new HalloweenItem(DefaultProps.RAW_CANDY_ID).setIconIndex(15+16).setCreativeTab(CreativeTabs.tabMisc).setItemName("rawCandy");
+			rawCandyBucket = new HalloweenItem(DefaultProps.RAW_CANDY_BUCKET_ID).setIconIndex(8).setMaxStackSize(1).setCreativeTab(CreativeTabs.tabMisc).setContainerItem(Item.bucketEmpty).setItemName("rawCandyBucket");
 			rawCandyCell = new HalloweenItem(DefaultProps.RAW_CANDY_CELL_ID).setIconIndex(7).setCreativeTab(CreativeTabs.tabMisc).setItemName("rawCandyCell");
 			rawCandyCan = new HalloweenItem(DefaultProps.RAW_CANDY_CAN_ID).setIconIndex(2).setCreativeTab(CreativeTabs.tabMisc).setItemName("rawCandyCan");
 			rawCandyWaxCapsule = new HalloweenItem(DefaultProps.RAW_CANDY_WAX_CAPSULE_ID).setIconIndex(3).setCreativeTab(CreativeTabs.tabMisc).setItemName("rawCandyWaxCapsule");
@@ -172,13 +174,15 @@ public class Halloween {
 			milkWaxCapsule = new HalloweenItem(DefaultProps.MILK_WAX_CAPSULE_ID).setIconIndex(10).setCreativeTab(CreativeTabs.tabMisc).setItemName("milkWaxCapsule");
 			milkRefractoryCapsule = new HalloweenItem(DefaultProps.MILK_REFRACTORY_CAPSULE_ID).setIconIndex(13).setCreativeTab(CreativeTabs.tabMisc).setItemName("milkRefractoryCapsule");
 
-			candyRed = (new CandyFood(DefaultProps.CANDY1, 0, 2F)).setPotionEffect(Potion.fireResistance.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 0).setItemName("candyRed");
-			candyGreen = (new CandyFood(DefaultProps.CANDY2, 0, 2F)).setPotionEffect(Potion.regeneration.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 1).setItemName("candyGreen");
-			candyBlue = (new CandyFood(DefaultProps.CANDY3, 0, 2F)).setPotionEffect(Potion.waterBreathing.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 2).setItemName("candyBlue");
-			candyYellow = (new CandyFood(DefaultProps.CANDY4, 0, 2F)).setPotionEffect(Potion.nightVision.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 3).setItemName("candyYellow");
-			candyOrange = (new CandyFood(DefaultProps.CANDY5, 0, 2F)).setPotionEffect(Potion.digSpeed.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 4).setItemName("candyOrange");
-			candyPumpkin = (new CandyFood(DefaultProps.CANDY6, 0, 2F)).setPotionEffect(Potion.invisibility.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 5).setItemName("candyPumpkin");
-			candyPink = (new CandyFood(DefaultProps.CANDY7, 0, 2F)).setPotionEffect(Potion.heal.getId(), 30, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 6).setItemName("candyPink");
+			candyRed = (new CandyFood(DefaultProps.CANDY1, 0, 2F)).setPotionEffect(Potion.regeneration.getId(), 20, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 0).setItemName("candyRed");
+			candyGreen = (new CandyFood(DefaultProps.CANDY2, 0, 2F)).setPotionEffect(Potion.jump.getId(), 20, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 1).setItemName("candyGreen");
+			candyBlue = (new CandyFood(DefaultProps.CANDY3, 0, 2F)).setPotionEffect(Potion.moveSpeed.getId(), 20, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 2).setItemName("candyBlue");
+			candyYellow = (new CandyFood(DefaultProps.CANDY4, 0, 2F)).setPotionEffect(Potion.digSpeed.getId(), 20, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 3).setItemName("candyYellow");
+			candyOrange = (new CandyFood(DefaultProps.CANDY5, 0, 2F)).setPotionEffect(Potion.fireResistance.getId(), 20, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 4).setItemName("candyOrange");
+			candyPumpkin = (new CandyFood(DefaultProps.CANDY6, 0, 2F)).setPotionEffect(Potion.nightVision.getId(), 20, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 5).setItemName("candyPumpkin");
+			candyPink = (new CandyFood(DefaultProps.CANDY7, 0, 2F)).setPotionEffect(Potion.heal.getId(), 20, 2, 1F).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 6).setItemName("candyPink");
+			
+			pumpkinSoup = (new HalloweenSoup(DefaultProps.PUMPKIN_SOUP, 8)).setCreativeTab(CreativeTabs.tabFood).setIconIndex(1 * 16 + 12).setItemName("pumpkinSoup");
 
 
 			
@@ -214,13 +218,15 @@ public class Halloween {
 			LanguageRegistry.addName(milkRefractoryCapsule, "Milk Capsule");
 			
 			
-			LanguageRegistry.addName(candyBlue, "Blue Candy");
-			LanguageRegistry.addName(candyGreen, "Green Candy");
+			LanguageRegistry.addName(candyBlue, "Blueberry Candy");
+			LanguageRegistry.addName(candyGreen, "Apple Candy");
 			LanguageRegistry.addName(candyOrange, "Orange Candy");
 			LanguageRegistry.addName(candyPumpkin, "Pumpkin Candy");
-			LanguageRegistry.addName(candyPink, "Pink Candy");
-			LanguageRegistry.addName(candyRed, "Red Candy");
-			LanguageRegistry.addName(candyYellow, "Yellow Candy");
+			LanguageRegistry.addName(candyPink, "Raspberry Candy");
+			LanguageRegistry.addName(candyRed, "Strawberry Candy");
+			LanguageRegistry.addName(candyYellow, "Lemon Candy");
+			
+			LanguageRegistry.addName(pumpkinSoup, "Pumpkin Soup");
 			
 //			LanguageRegistry.addName(milkRefractoryCapsule, "Milk Capsule");
 			
@@ -250,20 +256,22 @@ public class Halloween {
 	@Init
 	public void initialize(FMLInitializationEvent evt) {
 		new LiquidStacks();
-		
+		CoreProxy.proxy.addAnimation();
 		LiquidManager.liquids.add(new LiquidData(LiquidStacks.rawCandy, new ItemStack(rawCandyBucket), new ItemStack(Item.bucketEmpty)));
 		LiquidManager.liquids.add(new LiquidData(LiquidStacks.milk, new ItemStack(Item.bucketMilk), new ItemStack(Item.bucketEmpty)));
 
 		CoreProxy.proxy.initializeRendering();
 		CoreProxy.proxy.initializeEntityRendering();
-
+		
+		
+		
 	}
 
 	
 	// Mods-Loaded Method
 	@PostInit
 	public void modsLoaded(FMLPostInitializationEvent evt){
-		CoreProxy.proxy.addAnimation();
+		
 				
 		modIC2 = Loader.isModLoaded("IC2");
 		modForestry = Loader.isModLoaded("Forestry");
@@ -324,8 +332,8 @@ public class Halloween {
             Block block = ablock1[j];
             GameRegistry.registerBlock(block);
         }
-
-    }
+	}
+	
 	public String getPriorities() {
 		return "after:mod_IC2;after:mod_BuildCraftCore;after:mod_BuildCraftEnergy;after:mod_BuildCraftFactory;after:mod_BuildCraftSilicon;after:mod_BuildCraftTransport;after:mod_RedPowerWorld;" +
 				"before:Railcraft";
