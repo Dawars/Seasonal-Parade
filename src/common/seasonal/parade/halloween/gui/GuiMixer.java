@@ -3,6 +3,7 @@ package seasonal.parade.halloween.gui;
 import org.lwjgl.opengl.GL11;
 
 import seasonal.parade.halloween.DefaultProps;
+import seasonal.parade.halloween.TileCandyMaker;
 import seasonal.parade.halloween.TileMixer;
 
 import net.minecraft.src.Block;
@@ -30,6 +31,39 @@ public class GuiMixer extends HalloweenGui{
     	this.fontRenderer.drawString("Mixer", 14, 5, 0x404040);
 		this.fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
     }
+    
+    protected boolean isMouseOver(int par1, int par2, int par3, int par4, int par5, int par6)
+    {
+        int var7 = this.guiLeft;
+        int var8 = this.guiTop;
+        par5 -= var7;
+        par6 -= var8;
+        return par5 >= par1 - 1 && par5 < par1 + par3 + 1 && par6 >= par2 - 1 && par6 < par2 + par4 + 1;
+    }
+	
+	@Override
+    public void drawScreen(int x, int y, float par3){
+		super.drawScreen(x, y, par3);
+		TileMixer mixer = (TileMixer) tile;
+		
+        if (this.isMouseOver(59, 21, 16, 47, x, y))//milk
+        {
+    		
+        	if (mixer.tankMilk.getLiquid() != null)
+            {
+        		this.func_74184_a(mixer.tankMilk.getLiquid().asItemStack(), x, y);
+            }
+        } 
+        else if (this.isMouseOver(116, 21, 16, 47, x, y))//candy
+        {
+        	if (mixer.tankCandy.getLiquid() != null)
+            {
+        		this.func_74184_a(mixer.tankCandy.getLiquid().asItemStack(), x, y);
+            }
+        }
+        
+	}
+	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
 		int i = mc.renderEngine.getTexture(DefaultProps.TEXTURE_PATH_GUI + "/mixer_gui.png");

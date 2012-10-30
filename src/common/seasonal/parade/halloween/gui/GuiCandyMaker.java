@@ -1,6 +1,11 @@
 package seasonal.parade.halloween.gui;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import seasonal.parade.halloween.DefaultProps;
 import seasonal.parade.halloween.LiquidHelper;
@@ -39,17 +44,95 @@ public class GuiCandyMaker extends HalloweenGui{
 	@Override
     public void drawScreen(int x, int y, float par3){
 		super.drawScreen(x, y, par3);
-		int guiLeft = this.guiLeft;
-        int guiTop = this.guiTop;
         if (this.isMouseOver(67, 22, 16, 47, x, y))//if mouse over
         {
     		TileCandyMaker candyMaker = (TileCandyMaker) tile;
-        	if (candyMaker.tankCandy.getLiquid() != null)
+    		ItemStack liquidItem = new ItemStack(candyMaker.tankCandy.getLiquid().asItemStack().getItem());
+        	
+    		
+        	if(candyMaker.tankCandy.getLiquid() != null)
             {
-        		this.func_74184_a(candyMaker.tankCandy.getLiquid().asItemStack(), x, y);
+        		System.out.println("ItemID: " + candyMaker.tankCandy.getLiquid().itemID);
+        		this.drawTooltip(liquidItem, x, y);
             }
         }
 	}
+	protected void drawTooltip(ItemStack item, int x, int y)
+    {
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        List text = new ArrayList();
+        text.add(item.getItem().getItemDisplayName(item));
+
+        if (!text.isEmpty())
+        {
+            int var5 = 0;
+            Iterator var6 = text.iterator();
+
+            while (var6.hasNext())
+            {
+                String var7 = (String)var6.next();
+                int var8 = this.fontRenderer.getStringWidth(var7);
+
+                if (var8 > var5)
+                {
+                    var5 = var8;
+                }
+            }
+
+            int drawX = x + 12;
+            int drawY = y - 12;
+            int var9 = 8;
+
+            if (text.size() > 1)
+            {
+                var9 += 2 + (text.size() - 1) * 10;
+            }
+
+            this.zLevel = 300.0F;
+            itemRenderer.zLevel = 300.0F;
+            int var10 = -267386864;
+            this.drawGradientRect(drawX - 3, drawY - 4, drawX + var5 + 3, drawY - 3, var10, var10);
+            this.drawGradientRect(drawX - 3, drawY + var9 + 3, drawX + var5 + 3, drawY + var9 + 4, var10, var10);
+            this.drawGradientRect(drawX - 3, drawY - 3, drawX + var5 + 3, drawY + var9 + 3, var10, var10);
+            this.drawGradientRect(drawX - 4, drawY - 3, drawX - 3, drawY + var9 + 3, var10, var10);
+            this.drawGradientRect(drawX + var5 + 3, drawY - 3, drawX + var5 + 4, drawY + var9 + 3, var10, var10);
+            int var11 = 1347420415;
+            int var12 = (var11 & 16711422) >> 1 | var11 & -16777216;
+            this.drawGradientRect(drawX - 3, drawY - 3 + 1, drawX - 3 + 1, drawY + var9 + 3 - 1, var11, var12);
+            this.drawGradientRect(drawX + var5 + 2, drawY - 3 + 1, drawX + var5 + 3, drawY + var9 + 3 - 1, var11, var12);
+            this.drawGradientRect(drawX - 3, drawY - 3, drawX + var5 + 3, drawY - 3 + 1, var11, var11);
+            this.drawGradientRect(drawX - 3, drawY + var9 + 2, drawX + var5 + 3, drawY + var9 + 3, var12, var12);
+
+            for (int var13 = 0; var13 < text.size(); ++var13)
+            {
+                String var14 = (String)text.get(var13);
+
+                if (var13 == 0)
+                {
+                    var14 = "\u00a7" + Integer.toHexString(item.getRarity().rarityColor) + var14;
+                }
+                else
+                {
+                    var14 = "\u00a77" + var14;
+                }
+
+                this.fontRenderer.drawStringWithShadow(var14, drawX, drawY, -1);
+
+                if (var13 == 0)
+                {
+                    drawY += 2;
+                }
+
+                drawY += 10;
+            }
+
+            this.zLevel = 0.0F;
+            itemRenderer.zLevel = 0.0F;
+        }
+    }
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer() {
