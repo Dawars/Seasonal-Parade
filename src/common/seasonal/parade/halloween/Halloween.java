@@ -18,6 +18,7 @@ import net.minecraft.src.GameWindowListener;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemFood;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.Material;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.Potion;
 import net.minecraftforge.common.Configuration;
@@ -82,6 +83,7 @@ public class Halloween {
 //    public static Block candyBasket;
     public static Block Mixer;
     public static Block candyMaker;
+    public static Block rottenLog;
     
  // Item Registry
  	public static Item ashItem;
@@ -154,8 +156,9 @@ public class Halloween {
 		    ash = (new BlockAsh(DefaultProps.ASH_LAYER_ID, 6)).setHardness(0.1F).setStepSound(Block.soundClothFootstep).setBlockName("ash").setLightOpacity(0);
 		    blockAsh = (new BlockAshBlock(DefaultProps.ASH_BLOCK_ID, 6)).setHardness(0.2F).setStepSound(Block.soundClothFootstep).setBlockName("ashBlock");
 //		    candyBasket = (new CandyBasket(DefaultProps.CANDY_BASKET_ID, Material.pumpkin)).setHardness(0.2F).setStepSound(Block.soundWoodFootstep).setBlockName("candyBasket");
-	 		Mixer = new BlockMixer(DefaultProps.MIXER_BLOCK_ID, 7).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("mixer");
-	 		candyMaker = new BlockCandyMaker(DefaultProps.CANDY_MAKER_ID, 3).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("candyMaker");
+	 		Mixer = new BlockMixer(DefaultProps.MIXER_BLOCK_ID, 7).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("mixer");
+	 		candyMaker = new BlockCandyMaker(DefaultProps.CANDY_MAKER_ID, 3).setHardness(1.0F).setStepSound(Block.soundStoneFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("candyMaker");
+	 		rottenLog = new HalloweenBlock(DefaultProps.ROTTEN_LOG_ID, 4, Material.wood).setHardness(1.0F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabBlock).setBlockName("rottenLog");
 
 			
 			
@@ -187,7 +190,7 @@ public class Halloween {
 
 			
 		    RegisterBlocks(new Block[] {
-					evilPumpkin, evilLantern, ash, blockAsh, Mixer, candyMaker
+					evilPumpkin, evilLantern, ash, blockAsh, Mixer, candyMaker, rottenLog
 			});
 			
 			
@@ -202,6 +205,7 @@ public class Halloween {
 //			LanguageRegistry.addName(candyBasket, "Candy Basket");
 			LanguageRegistry.addName(Mixer, "Mixer");
 			LanguageRegistry.addName(candyMaker, "Candy Maker");
+			LanguageRegistry.addName(rottenLog, "Rotten Wood");
 			
 			// Item Names
 			LanguageRegistry.addName(ashItem, "Ash");

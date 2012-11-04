@@ -19,8 +19,6 @@ public class DefaultProps {
 	public static final String NET_CHANNEL_NAME = "Halloween";
 
 
-
-
 	public static int NETWORK_UPDATE_RANGE = 128;
 
 	public static String TEXTURE_PATH = "/seasonal/parade/halloween/gfx";
@@ -45,7 +43,10 @@ public class DefaultProps {
 	public static int CANDY_BASKET_ID = 3204;
 	public static int MIXER_BLOCK_ID = 3205;
 	public static int CANDY_MAKER_ID = 3206;
-
+	public static int ROTTEN_LOG_ID = 3207;
+	public static int ROTTEN_LEAVES_ID = 3208;
+	public static int ROTTEN_VINES_ID = 3209;
+	
 	
 	
 	//item ids 15200 - 15500
